@@ -149,6 +149,14 @@ select:hover{border-color:#8caf9b}
 /* Explication d'un refus de suppression, sous la carte concernée. */
 .shared-note{color:#815609;font-size:12px;margin:6px 0 0;background:#fff5e2;
   border:1px solid #e6cb92;border-radius:8px;padding:7px 10px}
+.shared-note .linked-title{display:block;margin-top:8px;margin-bottom:3px}
+.shared-note .linked-post{display:flex;gap:2px;flex-direction:column;margin-top:5px;padding-left:8px;border-left:2px solid #e6cb92}
+.shared-note .linked-post-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.shared-note .linked-post-link{color:#815609;font-weight:700;text-decoration:underline}
+.shared-note .linked-post-link:hover{color:#5f4004}
+.shared-note .linked-relation{font-size:11px;color:#9b7a35}
+.shared-note .linked-text{display:block;color:#6d5c3d;line-height:1.35;max-width:70ch}
+.shared-note button.link{display:block;margin-top:8px}
 button.link{all:unset;color:#c0392b;font-weight:700;cursor:pointer;text-decoration:underline}
 button.link:focus-visible{outline:2px solid #c0392b;outline-offset:2px}
 button.link:disabled{opacity:.6;cursor:wait}

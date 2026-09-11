@@ -185,26 +185,43 @@ async function runWipe(button,id){
  }
 }
 
-// Un refus se comprend mieux avec le nom du voisin concerne que par un mot.
+// Un refus se comprend mieux avec le voisin concerne et la decision sure a
+// prendre qu'avec un simple message generique.
 function explainShared(button,id,payload){
  const card=button.closest('.job');
  if(!card)return;
- const others=(payload.with||[]).length;
+ const others=Number.isInteger(payload.others)?payload.others:(payload.with||[]).length;
  let note=card.querySelector('.shared-note');
- if(!note){note=el('p','','shared-note');card.querySelector('.info').append(note);}
- const plural=others>1;
- note.replaceChildren(document.createTextNode(
-  T('sharedNote')(others)));
- const anyway=el('button',T('wipeAnyway'),'link');anyway.type='button';
- anyway.onclick=async()=>{
-  anyway.disabled=true;anyway.textContent='Suppression…';
+ if(!note){note=el('div','','shared-note');card.querySelector('.info').append(note);}
+ note.replaceChildren(document.createTextNode(T('sharedNote')(others)));
+ const related=Array.isArray(payload.related_posts)?payload.related_posts:[];
+ if(related.length){
+  note.append(el('strong',T('linkedPosts'),'linked-title'));
+  for(const item of related.slice(0,5)){
+   const line=el('div',null,'linked-post');
+   const meta=el('span',null,'linked-post-meta');
+   const label=item.author?`@${item.author}`:`Post ${item.tweet_id}`;
+   const link=el('a',label,'linked-post-link');
+   link.href=item.url||`https://x.com/i/status/${item.tweet_id}`;
+   link.target='_blank';link.rel='noopener noreferrer';
+   meta.append(link,el('span',T('linkedRelation')(item.relation),'linked-relation'));
+   line.append(meta);
+   if(item.text)line.append(el('span',`« ${item.text} »`,'linked-text'));
+   note.append(line);
+  }
+ }
+ const keep=el('button',T('wipeKeepShared'),'link');keep.type='button';
+ keep.onclick=async()=>{
+  keep.disabled=true;keep.textContent=T('wipeRunning');
   try{
    if(playing===id)closePlayer();
-   await api('/api/delete',{tweet_id:id,force:true});
+   // Supprimer la ligne choisie, en conservant les fichiers encore references
+   // par les posts lies. Chaque post reste ainsi supprimable independamment.
+   await api('/api/delete',{tweet_id:id,preserve_shared:true});
    await loadPosts();
-  }catch{anyway.textContent=T('wipeFailed');}
+  }catch{keep.disabled=false;keep.textContent=T('wipeFailed');}
  };
- note.append(anyway);
+ note.append(keep);
  setTimeout(()=>{note.remove();resetWipe(button);},15000);
 }
 

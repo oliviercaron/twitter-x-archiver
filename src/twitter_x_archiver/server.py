@@ -307,9 +307,13 @@ def make_handler(jobs,token,stop=None,storage=None,gate=None,pause=None):
                         # aussi a un autre post : les detruire l'abimerait.
                         # Nommer ces voisins permet a l'utilisateur de decider.
                         others=sorted({o for r in plan['shared_raw'] for o in r['used_by']}
+                                      | {o for m in plan['shared_media'] for o in m.get('used_by',())}
                                       | remove_post.sharers(data_dir,ident))
                         return self.respond(409,{'error':'shared','shared':len(shared),
-                                                 'with':others[:5],'others':len(others)})
+                                                 'with':others[:5],'others':len(others),
+                                                 # L'interface peut expliquer le lien sans
+                                                 # refaire une lecture de la base cote navigateur.
+                                                 'related_posts':plan.get('related_posts',[])})
                     remove_post.apply(plan,data_dir,bool(body.get('force')),backup=False)
                     kept=remove_post.preserved_paths(plan) if preserve_shared else set()
                     left=remove_post.verify(data_dir,ident,preserved=kept)

@@ -143,13 +143,16 @@ const STRINGS = {
     wipeConfirm: 'Supprimer ?',
     wipeConfirmTip: 'Cliquez à nouveau pour supprimer. Rien ne pourra être récupéré.',
     wipeRunning: 'Suppression…',
-    wipeShared: 'Média partagé',
+    wipeShared: 'Média lié',
     wipeFailed: 'Échec',
     wipeLeft: 'Des fichiers subsistent',
     sharedNote: n => n > 1
-      ? `Ce média sert aussi à ${n} autres posts. Le supprimer les priverait de leur vidéo. `
-      : 'Ce média sert aussi à un autre post. Le supprimer le priverait de sa vidéo. ',
-    wipeAnyway: 'Supprimer quand même',
+      ? `Un média de ce post est aussi utilisé par ${n} autres archives. Il sera conservé pour elles.`
+      : 'Un média de ce post est aussi utilisé par une autre archive. Il sera conservé pour elle.',
+    linkedPosts: 'Post lié',
+    linkedRelation: relation => ({quote: 'Post cité', repost: 'Post reposté',
+      raw_response: 'Réponse brute partagée'}[relation] || 'Média partagé'),
+    wipeKeepShared: 'Supprimer ce post, garder le média',
 
     pairing: 'Connexion…',
     pairMissing: 'L’extension n’a pas répondu. Vérifiez son installation et son activation dans ce navigateur, puis rechargez cette page. Le guide d’installation précise les étapes pour chaque navigateur.',
@@ -298,13 +301,16 @@ const STRINGS = {
     wipeConfirm: 'Delete?',
     wipeConfirmTip: 'Click again to delete. Nothing can be recovered.',
     wipeRunning: 'Deleting…',
-    wipeShared: 'Shared media',
+    wipeShared: 'Linked media',
     wipeFailed: 'Failed',
     wipeLeft: 'Some files remain',
     sharedNote: n => n > 1
-      ? `${n} other posts use this media too. Deleting it would leave them without their video. `
-      : 'Another post uses this media too. Deleting it would leave it without its video. ',
-    wipeAnyway: 'Delete anyway',
+      ? `A media file from this post is also used by ${n} other archives. It will be kept for them.`
+      : 'A media file from this post is also used by another archive. It will be kept for it.',
+    linkedPosts: 'Linked post',
+    linkedRelation: relation => ({quote: 'Quoted post', repost: 'Reposted post',
+      raw_response: 'Shared raw response'}[relation] || 'Shared media'),
+    wipeKeepShared: 'Delete this post, keep the media',
 
     pairing: 'Connecting…',
     pairMissing: 'The extension did not respond. Check that it is installed and enabled in this browser, then reload this page. The installation guide has instructions for each browser.',

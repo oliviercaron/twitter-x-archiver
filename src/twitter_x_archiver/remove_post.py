@@ -68,6 +68,27 @@ def media_paths(row):
                 yield d['local_media_path'], d.get('sha256'), item.get('media_relation')
 
 
+def _post_url(ident, row):
+    """URL publique conservee dans la ligne, avec un repli toujours valide."""
+    url = str(row.get('tweet_url') or '')
+    try:
+        parsed = urlsplit(url)
+        if (parsed.scheme == 'https' and parsed.hostname in HOSTS
+                and not parsed.username and not parsed.password and not parsed.port):
+            return url
+    except ValueError:
+        pass
+    username = row.get('author_username')
+    return (f'https://x.com/{username}/status/{ident}' if username
+            else f'https://x.com/i/status/{ident}')
+
+
+def _compact_text(value, limit=240):
+    """Texte court pour l'avertissement, sans modifier le document archive."""
+    text = ' '.join(str(value or '').split())
+    return text if len(text) <= limit else text[:limit - 1].rstrip() + '…'
+
+
 def plan(data, ident):
     db = sqlite3.connect(f'file:{data/"collection.db"}?mode=ro', uri=True)
     rows = load(db)
@@ -83,14 +104,52 @@ def plan(data, ident):
                 other_sha.add(sha)
 
     media, shared_media = [], []
+    related = {}
+
+    def add_related(other_id, other, relation, matches=()):
+        """Prepare une description lisible des posts qui retiennent un fichier."""
+        entry = related.setdefault(other_id, {
+            'tweet_id': other_id,
+            'url': _post_url(other_id, other),
+            'author': other.get('author_username'),
+            'text': _compact_text(other.get('raw_content')),
+            'created_at': other.get('created_at_utc'),
+            'relations': set(),
+            'media_count': 0,
+        })
+        if relation:
+            entry['relations'].add(relation)
+        entry['media_count'] = max(entry['media_count'], len(other.get('media') or []))
+        # A quote can expose both a video and its thumbnail. Count a post once.
+        if matches:
+            entry['media_count'] = max(entry['media_count'], len({p for p, _, _ in matches}))
+
     for path, (sha, relation) in mine_paths.items():
-        target = shared_media if (path in other_paths or (sha and sha in other_sha)) else media
-        target.append({'path': path, 'sha256': sha, 'relation': relation})
+        owners = []
+        for other_id, other in others.items():
+            matches = [(p, s, r) for p, s, r in media_paths(other)
+                       if p == path or (sha and s and s == sha)]
+            if matches:
+                owners.append(other_id)
+                add_related(other_id, other, relation, matches)
+        target = shared_media if owners else media
+        target.append({'path': path, 'sha256': sha, 'relation': relation,
+                       'used_by': owners[:5]})
 
     raw, shared_raw = [], []
     for ref in (row.get('raw_response_refs') or []) if row else []:
         users = [i for i, r in others.items() if ref in (r.get('raw_response_refs') or [])]
+        for other_id in users:
+            add_related(other_id, others[other_id], 'raw_response')
         (shared_raw if users else raw).append({'ref': ref, 'used_by': users})
+
+    related_posts = []
+    relation_order = {'quote': 0, 'repost': 1, 'own': 2, 'raw_response': 3}
+    for entry in related.values():
+        relations = sorted(entry.pop('relations'), key=lambda value: relation_order.get(value, 9))
+        entry['relation'] = relations[0] if relations else 'shared'
+        related_posts.append(entry)
+    related_posts.sort(key=lambda value: (value.get('author') or '', value['tweet_id']))
 
     receipts = [k for k, doc in db.execute('SELECT key, doc FROM files')
                 if (json.loads(doc).get('local_media_path') or '') in mine_paths]
@@ -134,7 +193,8 @@ def plan(data, ident):
     return {'ident': ident, 'row': row, 'job': job, 'media': media, 'shared_media': shared_media,
             'raw': raw, 'shared_raw': shared_raw, 'receipts': receipts, 'pages': pages,
             'posts_dir': (data / 'posts' / ident), 'in_parquet': in_parquet,
-            'stray': sorted(stray), 'retained_strays': sorted(retained_strays), 'exports': exports}
+            'stray': sorted(stray), 'retained_strays': sorted(retained_strays), 'exports': exports,
+            'related_posts': related_posts[:5]}
 
 
 def sharers(data, ident):

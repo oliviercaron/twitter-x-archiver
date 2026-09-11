@@ -65,6 +65,12 @@ def test_shared_media_is_refused_not_destroyed(tmp_path):
     try:
         r = httpx.post(base + '/api/delete', json={'tweet_id': '222'}, headers=HEAD)
         assert r.status_code == 409 and r.json()['error'] == 'shared'
+        details = r.json()['related_posts']
+        assert details and details[0]['tweet_id'] == '111'
+        assert details[0]['author'] == 'a'
+        assert details[0]['url'] == 'https://x.com/a/status/111'
+        assert details[0]['text'] == 'texte'
+        assert details[0]['relation'] == 'quote'
         assert (data / 'media/videos/111_00.mp4').exists()
         db = sqlite3.connect(data / 'collection.db')
         assert db.execute('SELECT COUNT(*) FROM tweets').fetchone()[0] == 2
