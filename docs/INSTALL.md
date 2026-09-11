@@ -47,4 +47,3 @@ The repository includes experimental Safari/Xcode source in `safari/`. It must b
 ## Optional video details
 
 The app saves videos without FFmpeg. Install FFmpeg and make `ffprobe` available in your system `PATH` if you also want measured codec, dimensions, duration and frame-rate details. Without it, those technical fields are marked as unavailable.
-

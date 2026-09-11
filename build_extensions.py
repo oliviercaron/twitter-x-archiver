@@ -54,6 +54,7 @@ def build(target, destination):
     (destination / 'archive_config.js').write_text(
         'globalThis.ARCHIVE_CONFIG = ' + json.dumps(config) + ';\n', encoding='utf-8')
     (destination / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+    if (ROOT/'LICENSE').is_file():shutil.copyfile(ROOT/'LICENSE',destination/'LICENSE')
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as bundle:
         for item in sorted(destination.rglob('*')):
             if item.is_file():

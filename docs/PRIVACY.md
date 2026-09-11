@@ -9,4 +9,3 @@ These cookie values are not included in CSV exports, returned by the local API o
 The local service contacts X and its media hosts to retrieve selected posts, replies, images and videos. X therefore receives normal network requests associated with your account and connection. The extension does not add analytics or send your archive to a separate storage service.
 
 When reporting a problem, never post your cookies, `session.json`, browser profile, raw request headers or an archive containing private material. A screenshot with sample data and a description of the error is usually enough.
-
