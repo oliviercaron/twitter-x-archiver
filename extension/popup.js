@@ -37,4 +37,4 @@ function chosenCategory(){
 $('#category').addEventListener('change',toggleNew);
 loadCategories();
 
-$('#archive').addEventListener('click',async()=>{$('#archive').disabled=true;try{const r=await EXT.runtime.sendMessage({type:'ARCHIVE',url:$('#url').value,note:$('#note').value,refresh:$('#refresh').checked,includeReplies:$('#include-replies').checked,category:chosenCategory()});if(!r?.ok)throw Error(r?.error||t('popupFailed'));$('#status').textContent=t(r.result.status==='done'?'popupAlready':'popupQueued');}catch(e){$('#status').textContent=e.message;}finally{$('#archive').disabled=false;}});
+$('#archive').addEventListener('click',async()=>{$('#archive').disabled=true;try{const r=await EXT.runtime.sendMessage({type:'ARCHIVE',url:$('#url').value,note:$('#note').value,refresh:false,includeReplies:$('#include-replies').checked,category:chosenCategory()});if(!r?.ok)throw Error(r?.error||t('popupFailed'));$('#status').textContent=t(r.result.status==='done'?'popupAlready':'popupQueued');}catch(e){$('#status').textContent=e.message;}finally{$('#archive').disabled=false;}});
