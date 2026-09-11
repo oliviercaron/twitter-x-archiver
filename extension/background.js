@@ -1,9 +1,23 @@
 // Firefox et Safari exposent les API Promise via browser ; Chrome MV3 via chrome.
+// Chrome charge le service worker seul ; les autres paquets peuvent déjà avoir
+// chargé ce fichier avant background.js.
+if(!globalThis.archiveMessage&&typeof importScripts==='function'){
+ try{importScripts('language.js');}catch{}
+}
 const EXT=globalThis.browser||globalThis.chrome;
 const BASE='http://127.0.0.1:18765';
 // Le paquet Safari fournit son identifiant d’application via archive_config.js.
 const HOST=globalThis.ARCHIVE_CONFIG?.nativeHost||'com.zevent.archive';
-const t=(key,...args)=>EXT.i18n.getMessage(key,args.length?args:undefined)||key;
+let uiLanguage='en';
+const t=(key,...args)=>globalThis.archiveMessage
+ ? globalThis.archiveMessage(EXT,uiLanguage,key,args)
+ : EXT.i18n.getMessage(key,args.length?args:undefined)||key;
+try{
+ EXT.storage?.onChanged?.addListener((changes,area)=>{
+  if(area==='local'&&changes.uiLanguage)uiLanguage=changes.uiLanguage.newValue==='fr'?'fr':'en';
+ });
+ EXT.storage?.local?.get('uiLanguage').then(value=>{uiLanguage=value?.uiLanguage==='fr'?'fr':'en';}).catch(()=>{});
+}catch{}
 let starting=null;
 // Chrome interdit a une extension de lancer un programme ; l'hote natif est le
 // seul pont autorise. Un seul demarrage a la fois, meme si plusieurs boutons
