@@ -1,0 +1,170 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta name="bridge-token" content="__BRIDGE_TOKEN__"><title>Archivage X</title><link rel="stylesheet" href="/ui.css"></head><body>
+<main>
+
+<header>
+  <div class="mark">↓</div>
+  <div class="brand"><h1 data-t="title"></h1><p data-t="tagline"></p></div>
+  <nav id="lang" class="lang" data-t-aria="langAria">
+    <a href="?lang=fr" data-lang="fr" lang="fr" aria-label="Français">FR</a>
+    <a href="?lang=en" data-lang="en" lang="en" aria-label="English">EN</a>
+  </nav>
+</header>
+
+<div id="setup" class="strip" role="status">
+  <span id="setup-text" data-t="setupChecking"></span>
+  <span class="side">
+    <button type="button" id="pair-extension" data-t="pairButton" hidden></button>
+    <button type="button" id="use-session" class="secondary" data-t="sessionButton" hidden></button>
+  </span>
+</div>
+<p id="pair-status" role="status" class="hint"></p>
+
+<section id="library" aria-labelledby="library-title">
+  <div class="row library-heading">
+    <div class="library-label"><h2 id="library-title" data-t="listTitle"></h2><span id="counts"></span></div>
+    <nav class="quick-actions" data-t-aria="actionsAria">
+      <a class="action secondary" href="#results-card" data-t="exportSubmit"></a>
+      <a class="action" href="#add-card" data-t="addTitle"></a>
+    </nav>
+  </div>
+<div class="card filters">
+  <h2 class="sr-only" data-t="filterTitle"></h2>
+  <form id="filters" role="search">
+    <div class="row">
+      <input type="search" id="q" data-t-placeholder="filterSearch" data-t-aria="filterSearch">
+      <input id="compte" list="accounts" data-t-placeholder="filterAccount" data-t-aria="filterAccount" autocomplete="off">
+      <datalist id="accounts"></datalist>
+      <select id="categorie" data-t-aria="filterCategoryAria">
+        <option value="" data-t="filterCategory"></option>
+      </select>
+      <select id="tri" data-t-aria="sortAria">
+        <option value="recent" data-t="sortRecent"></option>
+        <option value="ancien" data-t="sortOldest"></option>
+        <option value="publie" data-t="sortPublished"></option>
+        <option value="publie_asc" data-t="sortPublishedAsc"></option>
+        <option value="vues" data-t="sortViews"></option>
+        <option value="likes" data-t="sortLikes"></option>
+        <option value="reposts" data-t="sortReposts"></option>
+      </select>
+      <button type="button" id="clear" class="secondary" data-t="filterReset"></button>
+    </div>
+    <div class="row pillrow">
+      <fieldset class="pills">
+        <legend data-t="filterMedia"></legend>
+        <input type="radio" name="type" id="t-" value="" checked><label for="t-" data-t="filterAll"></label>
+        <input type="radio" name="type" id="t-video" value="video"><label for="t-video" data-t="filterVideo"></label>
+        <input type="radio" name="type" id="t-photo" value="photo"><label for="t-photo" data-t="filterPhoto"></label>
+      </fieldset>
+      <span class="dates">
+        <label for="du" data-t="filterFrom"></label>
+        <input type="date" id="du" data-t-aria="filterFromAria">
+        <label for="au" data-t="filterTo"></label>
+        <input type="date" id="au" data-t-aria="filterToAria">
+      </span>
+      <fieldset class="pills">
+        <legend data-t="filterState"></legend>
+        <input type="radio" name="statut" id="s-" value="" checked><label for="s-" data-t="filterAll"></label>
+        <input type="radio" name="statut" id="s-echec" value="echec"><label for="s-echec" data-t="filterFailed"></label>
+        <input type="radio" name="statut" id="s-cours" value="cours"><label for="s-cours" data-t="filterRunning"></label>
+      </fieldset>
+    </div>
+  </form>
+</div>
+
+  <div class="row archive-tools">
+    <div class="side">
+      <span id="retry-status" class="hint"></span>
+      <button type="button" id="retry-all" data-t="retryAll" disabled></button>
+    </div>
+  </div>
+  <p id="service-status" role="status" class="hint"></p>
+  <p id="live" role="status" class="sr-only"></p>
+  <video id="player" class="player" controls preload="metadata" playsinline hidden></video>
+  <div id="jobs"></div>
+  <nav class="pager" id="pager" aria-label="Pages"></nav>
+</section>
+
+<section class="card" id="add-card" aria-labelledby="add-title">
+  <div class="section-heading"><h2 id="add-title" data-t="addTitle"></h2><a class="back-link" href="#library" data-t="backToArchives"></a></div>
+  <p class="section-description" data-t="addHelp"></p>
+  <form id="add">
+    <textarea id="urls" rows="3" data-t-placeholder="addPlaceholder" data-t-aria="addAria" required></textarea>
+    <details class="options">
+      <summary data-t="addOptions"></summary>
+      <div class="options-body">
+        <label for="note" data-t="addNoteLabel"></label>
+        <input id="note" data-t-placeholder="addNote" data-t-aria="addNote">
+        <label class="check"><input type="checkbox" id="include-replies"> <span data-t="addReplies"></span></label>
+        <label class="check"><input type="checkbox" id="refresh"> <span data-t="addRefresh"></span></label>
+      </div>
+    </details>
+    <div class="form-actions"><p id="feedback" role="status" class="hint"></p><button type="submit" data-t="addSubmit"></button></div>
+  </form>
+</section>
+
+<section class="card" id="results-card" aria-labelledby="export-title">
+  <div class="section-heading"><h2 id="export-title" data-t="exportTitle"></h2><a class="back-link" href="#library" data-t="backToArchives"></a></div>
+  <p class="section-description" data-t="exportHelp"></p>
+  <form id="export-results">
+    <label for="result-folder" data-t="exportFolderLabel"></label>
+    <div class="row folder-row">
+      <input id="result-folder" data-t-placeholder="exportFolder" data-t-aria="exportFolder" required>
+      <button type="button" id="choose-folder" class="secondary" data-t="exportChoose"></button>
+    </div>
+    <div class="export-scope">
+      <label class="scope" for="export-categories"><span data-t="exportScope"></span>
+        <select id="export-categories"><option value="" data-t="exportScopeAll"></option></select>
+      </label>
+      <button type="submit" id="export-button" data-t="exportSubmit"></button>
+    </div>
+    <details class="options export-options">
+      <summary data-t="exportOptions"></summary>
+      <div class="options-body">
+        <label class="check"><input type="checkbox" id="include-automatic"> <span data-t="exportOld"></span></label>
+        <p data-t="exportWhatBody"></p>
+      </div>
+    </details>
+    <p id="export-status" role="status" class="hint export-status"></p>
+    <details id="export-location" class="export-location" hidden>
+      <summary data-t="exportLocation"></summary><code id="export-path"></code>
+    </details>
+  </form>
+</section>
+
+<section class="card storage-card">
+  <details id="storage-settings">
+    <summary data-t="storageTitle"></summary>
+    <p class="section-description" data-t="storageHelp"></p>
+    <code id="storage-path" class="storage-path"></code>
+    <div class="row storage-actions">
+      <button type="button" id="storage-open" class="secondary" data-t="storageOpen" disabled></button>
+      <button type="button" id="storage-edit" class="secondary" data-t="storageEdit" disabled></button>
+    </div>
+    <form id="storage-move" hidden>
+      <label for="storage-destination" data-t="storageDestination"></label>
+      <div class="row folder-row">
+        <input id="storage-destination" data-t-placeholder="storageDestinationHint" required>
+        <button type="button" id="storage-choose" class="secondary" data-t="exportChoose"></button>
+      </div>
+      <p class="hint storage-review" data-t="storageReview"></p>
+      <div class="row storage-actions">
+        <button type="submit" id="storage-confirm" data-t="storageConfirm" disabled></button>
+        <button type="button" id="storage-cancel" class="secondary" data-t="storageCancel"></button>
+      </div>
+    </form>
+    <progress id="storage-progress" hidden data-t-aria="storageProgress"></progress>
+    <p id="storage-status" class="hint export-status" role="status"></p>
+  </details>
+</section>
+
+<footer>
+  <details class="technical-details">
+    <summary data-t="technicalTitle"></summary>
+    <dl>
+      <dt data-t="filesAre"></dt><dd><code id="path-data">data</code></dd>
+      <dt data-t="postsAre"></dt><dd><code id="path-posts">posts</code></dd>
+      <dt data-t="extensionIs"></dt><dd><code id="path-extension">chrome-extension</code></dd>
+    </dl>
+  </details>
+</footer>
+</main><script src="/strings.js"></script><script src="/ui.js"></script></body></html>

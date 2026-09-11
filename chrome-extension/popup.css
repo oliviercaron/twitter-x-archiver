@@ -1,0 +1,3 @@
+body{width:320px;margin:0;padding:22px;box-sizing:border-box;font:13px/1.5 "Segoe UI",sans-serif;background:#f4f8f4;color:#163c30}h1{font-size:21px;margin:0 0 8px}p{color:#62796a}label{display:block;margin-top:12px;font-weight:600}input:not([type=checkbox]),textarea,select{box-sizing:border-box;width:100%;border:1px solid #c8d8cc;border-radius:7px;padding:9px;margin-top:5px;font:inherit}button{width:100%;background:#126b58;border:0;border-radius:8px;padding:11px;color:white;font-weight:600;margin-top:15px;cursor:pointer}button:disabled{opacity:.5}.check{font-size:12px;font-weight:400}a{color:#126b58}#status{min-height:20px}
+#new-category{margin-top:6px}
+#new-category[hidden]{display:none}

@@ -1,0 +1,72 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extensionName__",
+  "version": "1.1.1",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "fr",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "contextMenus",
+    "nativeMessaging",
+    "cookies"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1/*",
+    "http://localhost/*",
+    "https://twitter.com/*",
+    "https://x.com/*",
+    "https://www.x.com/*",
+    "https://www.twitter.com/*"
+  ],
+  "background": {
+    "scripts": [
+      "archive_config.js",
+      "background.js"
+    ]
+  },
+  "action": {
+    "default_title": "__MSG_actionTitle__",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://x.com/*",
+        "https://www.x.com/*",
+        "https://twitter.com/*",
+        "https://www.twitter.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "http://127.0.0.1/*",
+        "http://localhost/*"
+      ],
+      "js": [
+        "pair.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "archive-x@local.extension",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "authenticationInfo",
+          "websiteContent",
+          "browsingActivity"
+        ]
+      }
+    }
+  }
+}

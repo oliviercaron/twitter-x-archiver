@@ -1,0 +1,15 @@
+# Installation neuve : archivage manuel uniquement, aucune recherche automatique.
+timezone: UTC
+start: '2006-01-01T00:00:00'
+end_exclusive: '2100-01-01T00:00:00'
+data_dir: data
+http_backend: curl
+slice_hours: 24
+pause_seconds: 2
+max_quota_wait_seconds: 1200
+archive_raw: true
+ffprobe: ffprobe
+image_hashes: true
+streamers_file: streamers.json
+include_streamers: false
+queries: []

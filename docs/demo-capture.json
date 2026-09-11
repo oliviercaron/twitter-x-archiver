@@ -1,0 +1,20 @@
+{
+  "width": 1100,
+  "height": 920,
+  "duration": 17.800000000000004,
+  "frames": 63,
+  "synthetic": true,
+  "externalRequests": 0,
+  "uiFiles": [
+    "index.html",
+    "ui.js",
+    "ui.css",
+    "strings.js"
+  ],
+  "scenes": [
+    "Archive library",
+    "Filter Research category",
+    "Export Research to CSV and media",
+    "Return to library"
+  ]
+}

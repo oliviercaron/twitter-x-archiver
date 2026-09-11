@@ -1,0 +1,240 @@
+{
+  "extensionName": {
+    "message": "X Archive"
+  },
+  "extensionDescription": {
+    "message": "Pick an X post to archive its metadata and media into your local folder."
+  },
+  "actionTitle": {
+    "message": "Archive an X post"
+  },
+  "contextArchive": {
+    "message": "Archive this post"
+  },
+  "stateQueued": {
+    "message": "Waiting"
+  },
+  "stateFetching": {
+    "message": "Fetching…"
+  },
+  "stateDone": {
+    "message": "Archived"
+  },
+  "statePartial": {
+    "message": "Partial, try again"
+  },
+  "stateRetry": {
+    "message": "Try again"
+  },
+  "stateUnavailable": {
+    "message": "Unavailable on X"
+  },
+  "buttonArchive": {
+    "message": "Archive"
+  },
+  "tipArchive": {
+    "message": "Archive this post and its media"
+  },
+  "tipAlreadyArchived": {
+    "message": "Already archived: open the archive page"
+  },
+  "tipState": {
+    "message": "$state$ (local archive)",
+    "placeholders": {
+      "state": {
+        "content": "$1"
+      }
+    }
+  },
+  "tipStateError": {
+    "message": "$state$: $reason$",
+    "placeholders": {
+      "state": {
+        "content": "$1"
+      },
+      "reason": {
+        "content": "$2"
+      }
+    }
+  },
+  "queuing": {
+    "message": "Adding…"
+  },
+  "tipDelete": {
+    "message": "Delete this archive: text, counts, media and post data"
+  },
+  "confirmDelete": {
+    "message": "Delete?"
+  },
+  "tipConfirmDelete": {
+    "message": "Click again to delete. Nothing can be recovered."
+  },
+  "deleting": {
+    "message": "Deleting…"
+  },
+  "deleteShared": {
+    "message": "Shared media"
+  },
+  "deleteFailed": {
+    "message": "Failed"
+  },
+  "tipDeleteShared": {
+    "message": "Another post uses a file from this archive too. Deletion refused."
+  },
+  "leftBehind": {
+    "message": "Some files remain"
+  },
+  "errorUnreachable": {
+    "message": "The archiving service does not answer. Open the application folder and run DEMARRER.cmd."
+  },
+  "errorStillDown": {
+    "message": "The service still does not answer. Open http://127.0.0.1:18765 to see why."
+  },
+  "errorStartRefused": {
+    "message": "The archiving service could not start. Close it if it is already open, then try again."
+  },
+  "errorNotInstalled": {
+    "message": "Automatic start is not set up. Run INSTALLER D ABORD.cmd once, in the application folder."
+  },
+  "errorNotPaired": {
+    "message": "Open the archive page (http://127.0.0.1:18765) and connect the extension."
+  },
+  "errorPairAgain": {
+    "message": "Open the archive page and connect the extension again."
+  },
+  "errorRefused": {
+    "message": "The archiving service refused the request."
+  },
+  "errorOrigin": {
+    "message": "Origin not allowed."
+  },
+  "errorUnknown": {
+    "message": "Unknown command."
+  },
+  "errorBadId": {
+    "message": "Invalid identifier."
+  },
+  "errorBadUrl": {
+    "message": "Open an X post, or paste its address."
+  },
+  "errorNoExtension": {
+    "message": "Extension unreachable."
+  },
+  "errorPairRefused": {
+    "message": "Connection not allowed."
+  },
+  "errorNoSession": {
+    "message": "Sign in to X in this browser, then try again."
+  },
+  "errorNoSessionApi": {
+    "message": "X session unavailable"
+  },
+  "errorPairFailed": {
+    "message": "Connection failed"
+  },
+  "pairStatusReading": {
+    "message": "Fetching your X connection…"
+  },
+  "popupTitle": {
+    "message": "↓ Archive this post"
+  },
+  "popupIntro": {
+    "message": "Text, media and counts in your local folder."
+  },
+  "popupUrlLabel": {
+    "message": "Post address"
+  },
+  "popupNoteLabel": {
+    "message": "Note, optional"
+  },
+  "popupNoteHint": {
+    "message": "Topic, context…"
+  },
+  "popupReplies": {
+    "message": "Archive the replies as well"
+  },
+  "popupRepliesHint": {
+    "message": "This choice also applies to the button under posts and to right-click."
+  },
+  "popupRefresh": {
+    "message": "Read the counts again for a post already archived"
+  },
+  "popupSubmit": {
+    "message": "Archive"
+  },
+  "popupLink": {
+    "message": "Open the local page ↗"
+  },
+  "popupQueued": {
+    "message": "Added to the queue. The download happens locally."
+  },
+  "popupAlready": {
+    "message": "Already archived ✓"
+  },
+  "popupFailed": {
+    "message": "Request failed"
+  },
+  "popupCategoryLabel": {
+    "message": "Category"
+  },
+  "popupCategoryNew": {
+    "message": "New category…"
+  },
+  "catMoveInstead": {
+    "message": "Move instead to"
+  },
+  "catMoveTip": {
+    "message": "Move this post to “$category$”",
+    "placeholders": {
+      "category": {
+        "content": "$1"
+      }
+    }
+  },
+  "catMoved": {
+    "message": "Moved to $category$",
+    "placeholders": {
+      "category": {
+        "content": "$1"
+      }
+    }
+  },
+  "catMoveFailed": {
+    "message": "Could not move it"
+  },
+  "reloadTab": {
+    "message": "Reload this tab"
+  },
+  "catNewShort": {
+    "message": "Other…"
+  },
+  "catNewTip": {
+    "message": "Find or create a category"
+  },
+  "catPromptShort": {
+    "message": "Search categories"
+  },
+  "catCurrent": {
+    "message": "Category: $category$",
+    "placeholders": {
+      "category": {
+        "content": "$1"
+      }
+    }
+  },
+  "catCreate": {
+    "message": "Create “$category$”",
+    "placeholders": {
+      "category": {
+        "content": "$1"
+      }
+    }
+  },
+  "catUnknown": {
+    "message": "Category unavailable"
+  },
+  "catSuggestions": {
+    "message": "Suggested categories"
+  },
+  "errorCompanionRequired": {"message": "Open the Archivage X companion app on this Mac, then try again."}
+}

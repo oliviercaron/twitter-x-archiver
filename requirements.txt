@@ -1,0 +1,8 @@
+twscrape[curl]==0.20.1
+pyarrow==25.0.1
+PyYAML==6.0.3
+python-dotenv==1.2.3
+httpx==0.28.1
+Pillow==12.3.0
+ImageHash==4.3.2
+tzdata>=2025.1

@@ -1,0 +1,308 @@
+[
+  {
+    "name": "aiosqlite",
+    "version": "0.22.1",
+    "notices": [
+      "aiosqlite/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "altgraph",
+    "version": "0.17.5",
+    "notices": [
+      "altgraph/LICENSE"
+    ]
+  },
+  {
+    "name": "anyio",
+    "version": "4.15.1",
+    "notices": [
+      "anyio/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "beautifulsoup4",
+    "version": "4.15.0",
+    "notices": [
+      "beautifulsoup4/licenses/AUTHORS",
+      "beautifulsoup4/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "certifi",
+    "version": "2026.7.22",
+    "notices": [
+      "certifi/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "cffi",
+    "version": "2.1.1",
+    "notices": [
+      "cffi/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "colorama",
+    "version": "0.4.6",
+    "notices": [
+      "colorama/licenses/LICENSE.txt"
+    ]
+  },
+  {
+    "name": "curl_cffi",
+    "version": "0.16.3",
+    "notices": [
+      "curl_cffi/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "fake-useragent",
+    "version": "2.2.0",
+    "notices": [
+      "fake-useragent/licenses/AUTHORS",
+      "fake-useragent/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "h11",
+    "version": "0.16.0",
+    "notices": [
+      "h11/licenses/LICENSE.txt"
+    ]
+  },
+  {
+    "name": "httpcore",
+    "version": "1.0.9",
+    "notices": [
+      "httpcore/licenses/LICENSE.md"
+    ]
+  },
+  {
+    "name": "httpx",
+    "version": "0.28.1",
+    "notices": [
+      "httpx/licenses/LICENSE.md"
+    ]
+  },
+  {
+    "name": "idna",
+    "version": "3.19",
+    "notices": [
+      "idna/licenses/LICENSE.md"
+    ]
+  },
+  {
+    "name": "ImageHash",
+    "version": "4.3.2",
+    "notices": [
+      "imagehash/LICENSE"
+    ]
+  },
+  {
+    "name": "loguru",
+    "version": "0.7.3",
+    "notices": [
+      "loguru/LICENSE"
+    ],
+    "source": "https://raw.githubusercontent.com/Delgan/loguru/0.7.3/LICENSE"
+  },
+  {
+    "name": "numpy",
+    "version": "2.5.3",
+    "notices": [
+      "numpy/licenses/LICENSE.txt",
+      "numpy/licenses/numpy/_core/include/numpy/libdivide/LICENSE.txt",
+      "numpy/licenses/numpy/_core/src/common/pythoncapi-compat/COPYING",
+      "numpy/licenses/numpy/_core/src/highway/LICENSE",
+      "numpy/licenses/numpy/_core/src/multiarray/dragon4_LICENSE.txt",
+      "numpy/licenses/numpy/_core/src/npysort/x86-simd-sort/LICENSE.md",
+      "numpy/licenses/numpy/_core/src/umath/svml/LICENSE",
+      "numpy/licenses/numpy/fft/pocketfft/LICENSE.md",
+      "numpy/licenses/numpy/linalg/lapack_lite/LICENSE.txt",
+      "numpy/licenses/numpy/ma/LICENSE",
+      "numpy/licenses/numpy/random/LICENSE.md",
+      "numpy/licenses/numpy/random/src/distributions/LICENSE.md",
+      "numpy/licenses/numpy/random/src/mt19937/LICENSE.md",
+      "numpy/licenses/numpy/random/src/pcg64/LICENSE.md",
+      "numpy/licenses/numpy/random/src/philox/LICENSE.md",
+      "numpy/licenses/numpy/random/src/sfc64/LICENSE.md",
+      "numpy/licenses/numpy/random/src/splitmix64/LICENSE.md"
+    ]
+  },
+  {
+    "name": "packaging",
+    "version": "26.3",
+    "notices": [
+      "packaging/licenses/LICENSE",
+      "packaging/licenses/LICENSE.APACHE",
+      "packaging/licenses/LICENSE.BSD"
+    ]
+  },
+  {
+    "name": "pefile",
+    "version": "2024.8.26",
+    "notices": [
+      "pefile/LICENSE"
+    ]
+  },
+  {
+    "name": "pillow",
+    "version": "12.3.0",
+    "notices": [
+      "pillow/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "py-machineid",
+    "version": "1.0.0",
+    "notices": [
+      "py-machineid/LICENSE"
+    ]
+  },
+  {
+    "name": "pyarrow",
+    "version": "25.0.1",
+    "notices": [
+      "pyarrow/licenses/LICENSE.txt",
+      "pyarrow/licenses/NOTICE.txt"
+    ]
+  },
+  {
+    "name": "pycparser",
+    "version": "3.0",
+    "notices": [
+      "pycparser/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "Pygments",
+    "version": "2.21.0",
+    "notices": [
+      "pygments/licenses/AUTHORS",
+      "pygments/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "pyinstaller",
+    "version": "6.22.2",
+    "notices": [
+      "pyinstaller/licenses/COPYING.txt"
+    ]
+  },
+  {
+    "name": "pyinstaller-hooks-contrib",
+    "version": "2026.7",
+    "notices": [
+      "pyinstaller-hooks-contrib/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "PyOTP",
+    "version": "2.10.0",
+    "notices": [
+      "pyotp/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "python-dotenv",
+    "version": "1.2.3",
+    "notices": [
+      "python-dotenv/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "PyWavelets",
+    "version": "1.10.0",
+    "notices": [
+      "pywavelets/licenses/LICENSE",
+      "pywavelets/licenses/licenses_bundled/LICENSE_numpy.txt",
+      "pywavelets/licenses/licenses_bundled/LICENSE_scipy.txt"
+    ]
+  },
+  {
+    "name": "pywin32-ctypes",
+    "version": "0.2.3",
+    "notices": [
+      "pywin32-ctypes/LICENSE.txt"
+    ]
+  },
+  {
+    "name": "PyYAML",
+    "version": "6.0.3",
+    "notices": [
+      "pyyaml/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "scipy",
+    "version": "1.18.1",
+    "notices": [
+      "scipy/LICENSE.txt"
+    ]
+  },
+  {
+    "name": "setuptools",
+    "version": "84.0.0",
+    "notices": [
+      "setuptools/licenses/LICENSE",
+      "setuptools/_vendor/autocommand-2.2.2.dist-info/LICENSE",
+      "setuptools/_vendor/backports.tarfile-1.2.0.dist-info/LICENSE",
+      "setuptools/_vendor/importlib_metadata-8.7.1.dist-info/licenses/LICENSE",
+      "setuptools/_vendor/jaraco.text-4.0.0.dist-info/LICENSE",
+      "setuptools/_vendor/jaraco_context-6.1.0.dist-info/licenses/LICENSE",
+      "setuptools/_vendor/jaraco_functools-4.4.0.dist-info/licenses/LICENSE",
+      "setuptools/_vendor/more_itertools-10.8.0.dist-info/licenses/LICENSE",
+      "setuptools/_vendor/packaging-26.0.dist-info/licenses/LICENSE",
+      "setuptools/_vendor/packaging-26.0.dist-info/licenses/LICENSE.APACHE",
+      "setuptools/_vendor/packaging-26.0.dist-info/licenses/LICENSE.BSD",
+      "setuptools/_vendor/platformdirs-4.4.0.dist-info/licenses/LICENSE",
+      "setuptools/_vendor/tomli-2.4.0.dist-info/licenses/LICENSE",
+      "setuptools/_vendor/wheel-0.46.3.dist-info/licenses/LICENSE.txt",
+      "setuptools/_vendor/zipp-3.23.0.dist-info/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "soupsieve",
+    "version": "2.9.2",
+    "notices": [
+      "soupsieve/licenses/LICENSE.md"
+    ]
+  },
+  {
+    "name": "twscrape",
+    "version": "0.20.1",
+    "notices": [
+      "twscrape/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "typing_extensions",
+    "version": "4.16.0",
+    "notices": [
+      "typing_extensions/licenses/LICENSE"
+    ]
+  },
+  {
+    "name": "tzdata",
+    "version": "2026.3",
+    "notices": [
+      "tzdata/licenses/LICENSE",
+      "tzdata/licenses/licenses/LICENSE_APACHE"
+    ]
+  },
+  {
+    "name": "win32_setctime",
+    "version": "1.2.0",
+    "notices": [
+      "win32_setctime/LICENSE"
+    ]
+  },
+  {
+    "name": "winregistry",
+    "version": "2.1.5",
+    "notices": [
+      "winregistry/licenses/LICENSE"
+    ]
+  }
+]
