@@ -326,7 +326,7 @@ const STRINGS = {
 function pickLanguage() {
   const asked = new URLSearchParams(location.search).get('lang');
   if (STRINGS[asked]) return asked;
-  return (navigator.language || 'fr').toLowerCase().startsWith('en') ? 'en' : 'fr';
+  return 'en';
 }
 
 let LANG = pickLanguage();

@@ -64,6 +64,12 @@ EXT.runtime.onMessage.addListener((message,sender,reply)=>{
    await EXT.storage.local.set({bridgeToken:message.token});await api('/api/jobs');return {paired:true};
   }
   const ownPage=sender.url?.startsWith(EXT.runtime.getURL(''));
+  if(message.type==='SET_LANGUAGE'){
+   if(!ownPage&&!fromLocal(sender))throw Error(t('errorOrigin'));
+   const language=message.language==='fr'?'fr':'en';
+   await EXT.storage.local.set({uiLanguage:language});
+   return {language};
+  }
   if(message.type==='SESSION'||message.type==='FORGET_SESSION'){
    if(!ownPage&&!fromLocal(sender))throw Error(t('errorOrigin'));
    if(message.type==='FORGET_SESSION')return api('/api/session/forget',{});

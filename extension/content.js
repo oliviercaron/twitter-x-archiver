@@ -7,13 +7,13 @@
   // Recharger l'extension invalide le contexte des onglets deja ouverts :
   // EXT.i18n et EXT.runtime y jettent au lieu de repondre. Les textes
   // deja lus servent alors de secours, et le script s'arrete proprement.
-  const t=(key,...args)=>{
-    try{return EXT.i18n.getMessage(key,args.length?args:undefined)||key;}
-    catch{return key;}
-  };
+  let uiLanguage='en';
+  const t=(key,...args)=>globalThis.archiveMessage
+    ? globalThis.archiveMessage(EXT,uiLanguage,key,args)
+    : (()=>{try{return EXT.i18n.getMessage(key,args.length?args:undefined)||key;}catch{return key;}})();
   const perime=()=>{try{return !EXT.runtime?.id;}catch{return true;}};
   let arrete=false;
-  const labels={queued:t('stateQueued'),fetching:t('stateFetching'),done:t('stateDone'),
+  let labels={queued:t('stateQueued'),fetching:t('stateFetching'),done:t('stateDone'),
                 partial:t('statePartial'),retry:t('stateRetry'),unavailable:t('stateUnavailable')};
   // Une forme par etat : la couleur seule ne suffit pas, et un daltonien ne la lit pas.
   const icons={
@@ -23,7 +23,7 @@
     busy:'<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 6v6l3.5 2"/><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8" opacity=".45"/></svg>'};
   const SHAPES={done:'done',partial:'warn',retry:'warn',unavailable:'warn',queued:'busy',fetching:'busy'};
   const CROSS='<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/></svg>';
-  const RECHARGER=t('reloadTab');
+  let RECHARGER=t('reloadTab');
   const CONFIRM_DELAY=4000;
   const OFFER_DELAY=7000;
 
@@ -338,6 +338,23 @@
   let scheduled=false;
   const observer=new MutationObserver(()=>{if(arrete||scheduled)return;scheduled=true;setTimeout(()=>{scheduled=false;scan();},120);});
   observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['href']});
+
+  function applyLanguage(language){
+    uiLanguage=language==='fr'?'fr':'en';
+    labels={queued:t('stateQueued'),fetching:t('stateFetching'),done:t('stateDone'),
+      partial:t('statePartial'),retry:t('stateRetry'),unavailable:t('stateUnavailable')};
+    RECHARGER=t('reloadTab');
+    repaint();
+  }
+
+  // The archive page stores the explicit FR/EN choice in extension storage.
+  // New installations have no value yet and therefore stay in English.
+  try{
+    EXT.storage?.onChanged?.addListener((changes,area)=>{
+      if(area==='local'&&changes.uiLanguage)applyLanguage(changes.uiLanguage.newValue);
+    });
+    EXT.storage?.local?.get('uiLanguage').then(value=>applyLanguage(value?.uiLanguage)).catch(()=>{});
+  }catch{}
   scan();loadStates();
 
   const sondage=setInterval(async()=>{

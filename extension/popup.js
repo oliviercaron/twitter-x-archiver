@@ -1,13 +1,25 @@
 // Firefox et Safari exposent les API Promise via browser ; Chrome MV3 via chrome.
 const EXT=globalThis.browser||globalThis.chrome;
-const t=(key)=>EXT.i18n.getMessage(key)||key;
-// Le balisage ne porte que des cles : la langue vient du navigateur.
-for(const node of document.querySelectorAll('[data-i18n]'))node.textContent=t(node.dataset.i18n);
-for(const node of document.querySelectorAll('[data-i18n-placeholder]'))node.placeholder=t(node.dataset.i18nPlaceholder);
-document.documentElement.lang=EXT.i18n.getUILanguage().slice(0,2);
+let uiLanguage='en';
+const t=(key,...args)=>globalThis.archiveMessage
+ ? globalThis.archiveMessage(EXT,uiLanguage,key,args)
+ : (EXT.i18n.getMessage(key,args.length?args:undefined)||key);
+function localize(){
+ for(const node of document.querySelectorAll('[data-i18n]'))node.textContent=t(node.dataset.i18n);
+ for(const node of document.querySelectorAll('[data-i18n-placeholder]'))node.placeholder=t(node.dataset.i18nPlaceholder);
+ document.documentElement.lang=uiLanguage;
+}
+localize();
 const $=s=>document.querySelector(s);
+EXT.storage.local.get(['uiLanguage','includeReplies']).then(value=>{
+ uiLanguage=value.uiLanguage==='fr'?'fr':'en';
+ localize();
+ $('#include-replies').checked=value.includeReplies===true;
+}).catch(()=>{});
+EXT.storage.onChanged?.addListener((changes,area)=>{
+ if(area==='local'&&changes.uiLanguage){uiLanguage=changes.uiLanguage.newValue==='fr'?'fr':'en';localize();}
+});
 EXT.tabs.query({active:true,currentWindow:true}).then(([tab])=>{if(tab?.url&&/\/(?:[^/]+|i\/web)\/status\/\d+/.test(new URL(tab.url).pathname))$('#url').value=tab.url;}).catch(()=>{});
-EXT.storage.local.get('includeReplies').then(v=>$('#include-replies').checked=v.includeReplies===true);
 $('#include-replies').addEventListener('change',()=>EXT.storage.local.set({includeReplies:$('#include-replies').checked}));
 // La liste vient du service local, avec le dernier choix en tete.
 const NEW='\u0000new';
