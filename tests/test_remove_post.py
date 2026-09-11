@@ -3,7 +3,7 @@ import sqlite3
 
 import pytest
 
-from remove_post import apply, plan, post_id, verify
+from twitter_x_archiver.remove_post import apply, plan, post_id, verify
 
 
 def build(tmp_path, rows, jobs=(), extra_files=()):

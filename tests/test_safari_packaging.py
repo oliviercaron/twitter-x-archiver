@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from safari.prepare_safari import converter_command, patch_project, validate_extension
-from build_extensions import build
+from platforms.safari.prepare_safari import converter_command, patch_project, validate_extension
+from scripts.build_extensions import build
 
 
 def make_extension(tmp_path):

@@ -1,4 +1,4 @@
-from detect_duplicates import defects, on_disk, perceptual, shared_binaries, structural
+from twitter_x_archiver.detect_duplicates import defects, on_disk, perceptual, shared_binaries, structural
 
 
 def row(tweet_id, author, media, created='2026-09-06T12:00:00+00:00'):

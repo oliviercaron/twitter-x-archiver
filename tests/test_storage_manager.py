@@ -5,8 +5,8 @@ from unittest.mock import Mock
 
 import pytest
 
-import storage_manager
-from storage_manager import StorageManager
+from twitter_x_archiver import storage_manager
+from twitter_x_archiver.storage_manager import StorageManager
 
 
 @pytest.fixture

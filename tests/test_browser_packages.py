@@ -1,7 +1,7 @@
 import json
 import zipfile
 import pytest
-import build_extensions as build
+from scripts import build_extensions as build
 
 
 @pytest.mark.parametrize('browser', build.TARGETS)
@@ -9,7 +9,7 @@ def test_packages_shared_code_and_no_user_data(tmp_path, browser):
     folder, archive = build.build(browser, tmp_path/browser)
     manifest = json.loads((folder/'manifest.json').read_text())
     assert manifest['manifest_version'] == 3
-    assert (folder/'content.js').read_bytes() == (build.ROOT/'chrome-extension/content.js').read_bytes()
+    assert (folder/'content.js').read_bytes() == (build.ROOT/'extension/content.js').read_bytes()
     with zipfile.ZipFile(archive) as z:
         assert 'manifest.json' in z.namelist()
         assert all(not name.startswith(('data/', 'work/', '.env')) for name in z.namelist())

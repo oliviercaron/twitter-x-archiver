@@ -2,8 +2,8 @@ import threading
 from http.server import ThreadingHTTPServer
 import httpx
 import pytest
-from archive_server import make_handler
-from manual_archive import Jobs
+from twitter_x_archiver.server import make_handler
+from twitter_x_archiver.manual_archive import Jobs
 
 TOKEN='test-browser-origin-token-000000000'
 UUID='E28C6932-2A51-48B3-8B33-214187BBA831'

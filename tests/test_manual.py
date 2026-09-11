@@ -6,17 +6,17 @@ import threading
 from http.server import ThreadingHTTPServer
 import httpx
 import pytest
-from archive_urls import read_urls
-from archive_server import make_handler
-from manual_archive import Jobs,ManualWorker,canonical_url
+from twitter_x_archiver.import_urls import read_urls
+from twitter_x_archiver.server import make_handler
+from twitter_x_archiver.manual_archive import Jobs,ManualWorker,canonical_url
 from test_collector import fixture,make_config
-from normalize import raw_objects
+from twitter_x_archiver.normalize import raw_objects
 
 
 def test_account_status_exposes_only_quota_and_active_flag(tmp_path):
     import sqlite3
     from datetime import datetime,timedelta,timezone
-    from archive_server import account_status
+    from twitter_x_archiver.server import account_status
     with sqlite3.connect(tmp_path/'accounts.db') as db:
         db.execute('CREATE TABLE accounts(active INTEGER,locks TEXT,cookies TEXT)')
         reset=(datetime.now(timezone.utc)+timedelta(minutes=5)).strftime('%Y-%m-%d %H:%M:%S')

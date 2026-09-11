@@ -10,7 +10,7 @@ const names=['Économie','Santé',...Array.from({length:15},(_,i)=>'Recherche '+
  const chrome={i18n:{getMessage:k=>k},runtime:{onMessage:{addListener:f=>listener=f},onInstalled:{addListener(){}},getURL:()=> 'chrome-extension://test/'},
  storage:{local:{get:async()=>({bridgeToken:'test',category:'Santé',recentCategories:['Santé','Économie']}),set:async()=>{}}},
  contextMenus:{onClicked:{addListener(){}}}};
- vm.runInNewContext(fs.readFileSync(path.join(root,'chrome-extension/background.js'),'utf8'),{[apiNamespace]:chrome,URL,AbortSignal,fetch:async()=>({ok:true,status:200,json:async()=>({default:'Sans catégorie',categories:names.map(category=>({category}))})})});
+ vm.runInNewContext(fs.readFileSync(path.join(root,'extension/background.js'),'utf8'),{[apiNamespace]:chrome,URL,AbortSignal,fetch:async()=>({ok:true,status:200,json:async()=>({default:'Sans catégorie',categories:names.map(category=>({category}))})})});
  const answer=await new Promise(resolve=>listener({type:'RECENT',category:'Économie'},{url:'https://x.com/home'},resolve));
  assert.equal(answer.result.current,'Économie');assert.equal(answer.result.others.length,2);
  assert.equal(answer.result.known.length,17);
@@ -20,7 +20,7 @@ const names=['Économie','Santé',...Array.from({length:15},(_,i)=>'Recherche '+
  page.on('pageerror',e=>errors.push(e.message));
  await page.route('**/*',route=>route.fulfill({contentType:'text/html',body:`<html><body><article data-testid="tweet"><div data-testid="User-Name"><a href="https://x.com/demo/status/123"><time>Maintenant</time></a></div><p>Post de démonstration</p><div role="group"><button data-testid="like">J’aime</button><button data-testid="retweet">Republier</button></div></article></body></html>`}));
  await page.goto('https://x.com/home');
- const messages=JSON.parse(fs.readFileSync(path.join(root,'chrome-extension/_locales/fr/messages.json'),'utf8'));
+ const messages=JSON.parse(fs.readFileSync(path.join(root,'extension/_locales/fr/messages.json'),'utf8'));
  await page.evaluate(({messages,names,apiNamespace})=>{
    window.moves=[];window.failMove=false;
    window[apiNamespace]={i18n:{getMessage:(key,args=[])=>{const entry=messages[key];let text=entry?.message||key;for(const [name,value] of Object.entries(entry?.placeholders||{}))text=text.replace('$'+name+'$',args[Number(value.content.slice(1))-1]);return text;}},
@@ -33,8 +33,8 @@ const names=['Économie','Santé',...Array.from({length:15},(_,i)=>'Recherche '+
      return {ok:true,result};
     }}};
  },{messages,names,apiNamespace});
- await page.addStyleTag({path:path.join(root,'chrome-extension/content.css')});
- await page.addScriptTag({path:path.join(root,'chrome-extension/content.js')});
+ await page.addStyleTag({path:path.join(root,'extension/content.css')});
+ await page.addScriptTag({path:path.join(root,'extension/content.js')});
  await page.locator('.zevent-archive-button').click();
  const bar=page.locator('.zevent-cat-bar');await bar.waitFor();
  assert.equal(await bar.locator('.zevent-cat-label').textContent(),'Catégorie : Économie');

@@ -5,9 +5,9 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 import httpx
 import pytest
-import archive_server as server
-from manual_archive import Jobs
-from storage_manager import StorageManager
+import twitter_x_archiver.server as server
+from twitter_x_archiver.manual_archive import Jobs
+from twitter_x_archiver.storage_manager import StorageManager
 
 TOKEN='synthetic-storage-token'
 HEADERS={'Host':'127.0.0.1:18765','Authorization':'Bearer '+TOKEN}

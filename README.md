@@ -15,7 +15,7 @@ The easiest version is currently for **Windows with Chrome, Edge or Brave**.
 [**Download for Windows**](https://github.com/oliviercaron/twitter-x-archiver/releases/latest/download/twitter-x-archiver-windows.zip) · [All downloads](https://github.com/oliviercaron/twitter-x-archiver/releases/latest)
 
 1. Download the Windows ZIP from the release page and extract the whole folder.
-2. Run `INSTALL.cmd` once, then load the `chrome-extension` folder from your browser's extensions page with Developer mode enabled.
+2. Run `INSTALL.cmd` once, then load the `extensions/chrome` folder from your browser's extensions page with Developer mode enabled.
 3. Run `START.cmd`, sign in to X in the same browser, and start archiving.
 
 The app chooses a local archive folder automatically. You can open or change it later from **Archive storage**. Changing it copies and checks the archive before switching, and keeps the old copy.

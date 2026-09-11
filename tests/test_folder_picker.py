@@ -4,8 +4,8 @@ import subprocess
 from unittest.mock import Mock
 
 import pytest
-import export_service
-from export_service import ExportManager
+from twitter_x_archiver import export_service
+from twitter_x_archiver.export_service import ExportManager
 
 
 @pytest.fixture

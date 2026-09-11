@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "twitter-x-archiver"
+version = "0.2.0"
+description = "Save Twitter/X posts, media and conversations to a local archive."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{name = "Olivier Caron"}]
+dependencies = [
+  "twscrape[curl]==0.20.1",
+  "pyarrow==25.0.1",
+  "PyYAML==6.0.3",
+  "python-dotenv==1.2.3",
+  "httpx==0.28.1",
+  "Pillow==12.3.0",
+  "ImageHash==4.3.2",
+  "tzdata>=2025.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "build>=1", "pyinstaller>=6.22.2"]
+
+[project.scripts]
+twitter-x-archiver = "twitter_x_archiver.server:cli"
+twitter-x-import = "twitter_x_archiver.import_urls:main"
+twitter-x-install = "twitter_x_archiver.install_native_host:main"
+
+[project.urls]
+Homepage = "https://github.com/oliviercaron/twitter-x-archiver"
+Issues = "https://github.com/oliviercaron/twitter-x-archiver/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+twitter_x_archiver = ["ui/*.html", "ui/*.css", "ui/*.js", "defaults/*.yaml", "defaults/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

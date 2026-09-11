@@ -84,7 +84,7 @@ function article(id, quote=false) {
  await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(18765,'127.0.0.1',resolve);});
  let context;
  try {
-  const extension=path.join(root,'chrome-extension');
+  const extension=path.join(root,'extension');
   const profile=path.join(root,'work','extension-test-profile-v1_1');
   context=await chromium.launchPersistentContext(profile,{channel:'chromium',headless:true,
    ...((process.env.CHROMIUM_EXECUTABLE||process.argv[2])?{executablePath:process.env.CHROMIUM_EXECUTABLE||process.argv[2]}:{}),

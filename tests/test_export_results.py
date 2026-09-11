@@ -4,9 +4,9 @@ import json
 import sqlite3
 from pathlib import Path
 import pytest
-from archive import atomic_json
-from export_results import export_results,cell,tables,output_path,validate_csv_snapshot,display_path
-from export_service import ExportManager
+from twitter_x_archiver.archive import atomic_json
+from twitter_x_archiver.export_results import export_results,cell,tables,output_path,validate_csv_snapshot,display_path
+from twitter_x_archiver.export_service import ExportManager
 
 
 def make_data(tmp_path,corrupt=False):
@@ -99,7 +99,7 @@ def test_background_export_persists_chosen_destination(tmp_path):
 
 def test_cli_export_is_visible_from_the_dashboard(tmp_path):
     """Les deux chemins d'export ecrivent le meme statut."""
-    from export_results import run_cli
+    from twitter_x_archiver.export_results import run_cli
     data,_=make_data(tmp_path)
     manager=ExportManager(data)                       # tableau de bord deja ouvert
     assert manager.view()['export']['status']=='idle'
@@ -124,7 +124,7 @@ def test_deleted_export_folder_is_flagged(tmp_path):
 
 
 def test_cli_refuses_while_a_dashboard_export_runs(tmp_path):
-    from export_results import run_cli
+    from twitter_x_archiver.export_results import run_cli
     data,_=make_data(tmp_path)
     atomic_json(Path(data)/'export_status.json',{'status':'running'})
     with pytest.raises(ValueError,match='déjà en cours'):

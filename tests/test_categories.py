@@ -7,11 +7,11 @@ from http.server import ThreadingHTTPServer
 import httpx
 import pytest
 
-import categories
-import summary_index
-from archive_server import make_handler
-from export_results import export_results
-from manual_archive import Jobs
+from twitter_x_archiver import categories
+from twitter_x_archiver import summary_index
+from twitter_x_archiver.server import make_handler
+from twitter_x_archiver.export_results import export_results
+from twitter_x_archiver.manual_archive import Jobs
 from test_remove_post import build, tweet
 
 TOKEN = 'jeton-de-test-tres-long-0123456789'

@@ -8,10 +8,10 @@ import httpx
 import pyarrow.parquet as pq
 import pytest
 from PIL import Image
-from archive import Store
-from collect_zevent2026 import Collector, config_load, plan, single_writer
-from media import Downloader, original_image
-from normalize import normalize, raw_objects, reference_only
+from twitter_x_archiver.archive import Store
+from twitter_x_archiver.collector import Collector, config_load, plan, single_writer
+from twitter_x_archiver.media import Downloader, original_image
+from twitter_x_archiver.normalize import normalize, raw_objects, reference_only
 
 
 def fixture():
@@ -48,7 +48,7 @@ def row(payload=None, observed='2026-09-07T12:00:00+00:00', query='ZEVENT'):
 def make_config(tmp_path):
     root=Path(__file__).parents[1]
     import yaml
-    cfg=yaml.safe_load((root/'config.yaml').read_text())
+    cfg=yaml.safe_load((root/'src/twitter_x_archiver/defaults/config.yaml').read_text())
     cfg.update(timezone='Europe/Paris',start='2026-09-03T00:00:00',end_exclusive='2026-09-09T00:00:00',slice_hours=24,data_dir='data',include_streamers=False,pause_seconds=0,queries=['ZEVENT'],streamers_file='streamers.json')
     (tmp_path/'streamers.json').write_text(json.dumps({'streamers':[]}))
     (tmp_path/'config.yaml').write_text(yaml.safe_dump(cfg))
@@ -417,7 +417,7 @@ def test_real_mp4_download_and_ffprobe(tmp_path):
 
 
 def test_pipeline_requires_all_probe_results(tmp_path):
-    from run_pipeline import probe_ready
+    from twitter_x_archiver.run_pipeline import probe_ready
     s=Store(tmp_path)
     s.put_state('query:probe_a',{'base_query':'ZEVENT','status':'sampled_not_complete'})
     assert not probe_ready(tmp_path,['ZEVENT','#ZEVENT'])
@@ -427,7 +427,7 @@ def test_pipeline_requires_all_probe_results(tmp_path):
 
 
 def test_pipeline_does_not_start_after_failed_probe(tmp_path):
-    from run_pipeline import probe_ready
+    from twitter_x_archiver.run_pipeline import probe_ready
     s=Store(tmp_path)
     s.put_state('query:probe_a',{'base_query':'ZEVENT','status':'interrupted_retry_from_slice_start'})
     assert not probe_ready(tmp_path,['ZEVENT'])

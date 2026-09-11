@@ -49,7 +49,7 @@ const completed = { status: 'done', tweets: 70, copied_files: 207,
       const name = pathname === '/' ? 'index.html' : pathname.slice(1);
       if (!['index.html', 'ui.css', 'ui.js', 'strings.js'].includes(name)) return route.fulfill({ status: 404, body: '' });
       return route.fulfill({ contentType: name.endsWith('.js') ? 'text/javascript' : name.endsWith('.css') ? 'text/css' : 'text/html',
-        body: fs.readFileSync(path.join(root, 'manual_ui', name), 'utf8') });
+        body: fs.readFileSync(path.join(root, 'src', 'twitter_x_archiver', 'ui', name), 'utf8') });
     });
     await page.goto('http://archive.test/?lang=fr');
     await page.waitForSelector('.job');

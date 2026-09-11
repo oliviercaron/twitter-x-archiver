@@ -1,7 +1,7 @@
 // Synthetic dashboard only. No filesystem changes, native dialog or live service.
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
-const root=path.join(__dirname,'..','manual_ui');
+const root=path.join(__dirname,'..','src','twitter_x_archiver','ui');
 const json=body=>({contentType:'application/json',body:JSON.stringify(body)});
 (async()=>{
  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH});

@@ -6,9 +6,9 @@ from http.server import ThreadingHTTPServer
 import httpx
 import pytest
 
-from archive_server import make_handler
-from manual_archive import Jobs, ManualWorker
-from session_store import forget_session, read_session, session_present, valid, write_session
+from twitter_x_archiver.server import make_handler
+from twitter_x_archiver.manual_archive import Jobs, ManualWorker
+from twitter_x_archiver.session_store import forget_session, read_session, session_present, valid, write_session
 from test_collector import make_config
 
 GOOD_TOKEN = 'a' * 40
@@ -104,7 +104,7 @@ def test_worker_reloads_a_new_session_without_restart(tmp_path):
 
 
 def test_summary_text_is_readable_without_touching_the_archive():
-    from summaries import readable, summarise
+    from twitter_x_archiver.summaries import readable, summarise
     row = {'raw_content': 'Pour mes lesbiennes &lt;3 #ZEVENT https://t.co/uUIwdetyEr',
            'author_username': 'a', 'like_count': 3, 'view_count': 9,
            'media': [{'media_type': 'video',
@@ -118,7 +118,7 @@ def test_summary_text_is_readable_without_touching_the_archive():
 
 
 def test_summary_falls_back_to_the_image_itself():
-    from summaries import summarise
+    from twitter_x_archiver.summaries import summarise
     row = {'media': [{'media_type': 'photo', 'download': {'local_media_path': 'media/images/1_00.jpg'}}]}
     assert summarise(row)['thumb'] == 'media/images/1_00.jpg'
     assert summarise({'media': [{'media_type': 'video',
@@ -127,7 +127,7 @@ def test_summary_falls_back_to_the_image_itself():
 
 def test_summaries_are_cached_until_the_database_changes(tmp_path):
     import sqlite3
-    import summaries as mod
+    from twitter_x_archiver import summaries as mod
     data = tmp_path / 'data'
     data.mkdir()
     db = sqlite3.connect(data / 'collection.db')
@@ -142,7 +142,7 @@ def test_summaries_are_cached_until_the_database_changes(tmp_path):
 
 
 def test_summary_exposes_a_playable_video():
-    from summaries import summarise
+    from twitter_x_archiver.summaries import summarise
     row = {'media': [
         {'media_type': 'photo', 'download': {'local_media_path': 'media/images/1_00.jpg',
                                              'download_success': True}},
@@ -158,7 +158,7 @@ def test_summary_exposes_a_playable_video():
 
 
 def test_a_failed_download_is_not_playable():
-    from summaries import summarise
+    from twitter_x_archiver.summaries import summarise
     out = summarise({'media': [{'media_type': 'video',
                                 'download': {'local_media_path': 'media/videos/1_00.mp4',
                                              'download_success': False}}]})
@@ -167,7 +167,7 @@ def test_a_failed_download_is_not_playable():
 
 
 def test_kind_without_media_stays_empty():
-    from summaries import summarise
+    from twitter_x_archiver.summaries import summarise
     assert summarise({'media': []})['kind'] is None
     assert summarise({'media': [{'media_type': 'animated_gif',
                                  'download': {'local_media_path': 'a.mp4',

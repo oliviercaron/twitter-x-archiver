@@ -6,8 +6,8 @@ from http.server import ThreadingHTTPServer
 import httpx
 import pytest
 
-from archive_server import make_handler
-from manual_archive import Jobs
+from twitter_x_archiver.server import make_handler
+from twitter_x_archiver.manual_archive import Jobs
 from test_remove_post import build, tweet
 
 TOKEN = 'jeton-de-test-tres-long-0123456789'
@@ -137,7 +137,7 @@ def test_no_backup_is_left_behind(tmp_path):
 
 def index(tmp_path, posts):
     """Base minimale avec l'index de consultation."""
-    import summary_index
+    from twitter_x_archiver import summary_index
     data = tmp_path / 'data'
     data.mkdir(exist_ok=True)
     db = sqlite3.connect(data / 'collection.db')
@@ -224,7 +224,7 @@ def test_refusal_names_the_neighbours(tmp_path):
 
 def test_locked_file_is_retried_before_giving_up(tmp_path, monkeypatch):
     """Une video encore lue resiste un instant sous Windows."""
-    import remove_post
+    from twitter_x_archiver import remove_post
     data = build(tmp_path, [tweet('111', 'media/videos/111_00.mp4', 'aa')])
     attempts = {'n': 0}
     real = remove_post.Path.unlink

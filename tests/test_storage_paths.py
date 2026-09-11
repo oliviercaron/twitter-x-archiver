@@ -8,8 +8,8 @@ import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
-import app_paths
-import server_control
+from twitter_x_archiver import app_paths
+from twitter_x_archiver import server_control
 
 
 @pytest.fixture
@@ -119,7 +119,7 @@ def test_missing_saved_destination_never_falls_back(locations, tmp_path):
     missing = tmp_path / 'disconnected-drive'
     profile.mkdir(parents=True)
     app_paths.storage_settings_path().write_text(json.dumps({'data_dir': str(missing)}))
-    with pytest.raises(app_paths.StoragePathError, match='Reconnectez le disque'):
+    with pytest.raises(app_paths.StoragePathError, match='Reconnect the drive'):
         app_paths.resolve_data_dir()
     assert not missing.exists()
     assert not (profile / 'archives').exists()
@@ -130,7 +130,7 @@ def test_bad_preference_blocks_instead_of_falling_back(locations, contents):
     _, profile, _ = locations
     profile.mkdir(parents=True)
     app_paths.storage_settings_path().write_text(contents)
-    with pytest.raises(app_paths.StoragePathError, match='illisible'):
+    with pytest.raises(app_paths.StoragePathError, match='Cannot read'):
         app_paths.resolve_data_dir()
 
 
@@ -143,7 +143,8 @@ def test_set_path_requires_existing_directory(locations, tmp_path):
 
 def test_config_seeds_user_profile_and_preserves_existing_configs(locations):
     app, profile, assets = locations
-    (assets / 'config.yaml').write_text('data_dir: data\n')
+    (assets / 'defaults').mkdir()
+    (assets / 'defaults' / 'config.yaml').write_text('data_dir: data\n')
     assert app_paths.ensure_config() == profile / 'config.yaml'
     assert not (app / 'config.yaml').exists()
     (profile / 'config.yaml').write_text('data_dir: custom\n')
@@ -156,7 +157,7 @@ def test_config_seeds_user_profile_and_preserves_existing_configs(locations):
 def test_server_control_import_does_not_resolve_or_write(monkeypatch, locations):
     _, profile, _ = locations
     monkeypatch.setattr(app_paths, 'resolve_data_dir', lambda *a: pytest.fail('resolution at import'))
-    spec = importlib.util.spec_from_file_location('_storage_control_test', ROOT / 'server_control.py')
+    spec = importlib.util.spec_from_file_location('twitter_x_archiver._storage_control_test', ROOT / 'src/twitter_x_archiver/server_control.py')
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     assert not profile.exists()

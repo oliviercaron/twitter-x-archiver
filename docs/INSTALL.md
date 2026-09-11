@@ -1,49 +1,48 @@
 # Install Twitter / X Tweet Archiver
 
-## Windows with Chrome, Edge or Brave
+## Windows: the ready-to-use download
 
-Download the Windows ZIP from the latest [GitHub release](https://github.com/oliviercaron/twitter-x-archiver/releases/latest), then extract the whole folder somewhere you can keep it. Do not run the app from inside the ZIP or move the `.exe` by itself.
+Download **twitter-x-archiver-windows.zip** from the [latest release](https://github.com/oliviercaron/twitter-x-archiver/releases/latest). Extract the whole folder somewhere you can keep it.
 
-1. Run `INSTALL.cmd` once. The release also includes the original French shortcut, `INSTALLER D ABORD.cmd`.
-2. Open your browser's extensions page: `chrome://extensions`, `edge://extensions` or `brave://extensions`.
-3. Turn on **Developer mode**, choose **Load unpacked**, and select the `chrome-extension` folder from the extracted download.
-4. Sign in to X in that browser.
-5. Run `START.cmd` (also included as `DEMARRER.cmd`). The archive opens at `http://127.0.0.1:18765`.
-6. Allow access to X and the local app if your browser asks.
+1. Run **INSTALL.cmd** once.
+2. Open `chrome://extensions`, `edge://extensions` or `brave://extensions`.
+3. Turn on **Developer mode**, choose **Load unpacked**, and select **extensions/chrome** from the download.
+4. Sign in to X in that browser, then run **START.cmd** to open the archive.
+5. Allow access to X and the local app if your browser asks.
 
-Windows may warn you because this small release is not code-signed. If you move the application folder later, run `INSTALL.cmd` again so the browser bridge knows its new location.
+Keep `app/`, `extensions/` and the shortcuts together. The executable needs its bundled libraries. Windows may show a warning because the app is not code-signed. If you move the installation folder, run INSTALL.cmd again. UNINSTALL.cmd removes the browser registration and keeps your archives.
 
-## Where files are stored
+## Your files
 
-You do not have to choose a folder during setup. A new installation uses:
+No folder choice is needed during setup. A new installation uses your personal application-data folder. Open **Archive storage** to see the path or change it. The app copies and checks the archive before switching, and keeps the previous copy.
 
-- Windows: `%LOCALAPPDATA%\Archivage X\archives`
-- macOS: `~/Library/Application Support/Archivage X/archives`
-- Linux: `${XDG_DATA_HOME:-~/.local/share}/archivage-x/archives`
-
-Open **Archive storage** in the app to view or change this location. The export folder is chosen separately. If you change the archive location, the app copies and checks the data before switching and keeps the previous folder.
+The export folder is chosen separately. An export contains `tweets.csv`, `observations.csv`, media and source metadata. The CSVs use semicolons and UTF-8.
 
 ## Firefox
 
-Install the local app first, then open `about:debugging#/runtime/this-firefox`. Choose **Load Temporary Add-on** and select `firefox-extension/manifest.json`.
+Install the local app first. Open `about:debugging#/runtime/this-firefox`, choose **Load Temporary Add-on**, and select **extensions/firefox/manifest.json**. The separate Firefox ZIP contains the same files.
 
-This build is unsigned, so Firefox removes it when the browser restarts. A permanent Firefox installation needs a package signed by Mozilla. Firefox 140 or later is required.
+Firefox 140 or later is required. This unsigned build is temporary and is removed when Firefox restarts. Permanent installation still requires Mozilla signing.
 
-## macOS with Chrome
+## From source: Windows or macOS
 
-Download the source package and install Python 3.12 from python.org. In Terminal, open the extracted folder and run:
+Install Python 3.12, download the source package, and extract it. On Windows, run `launchers/windows/INSTALL.cmd`, then `launchers/windows/START.cmd`.
+
+On macOS, open Terminal in the extracted folder:
 
 ```sh
-sh installer.command
-sh demarrer.command
+sh launchers/macos/install.command
+sh launchers/macos/start.command
 ```
 
-Then load `chrome-extension` as an unpacked extension in Chrome. The Windows `.exe` does not run on macOS.
+For Chrome, load the **extension/** folder from the source package. To generate Firefox files, run `python scripts/build_extensions.py --browser firefox --output dist/extensions`, then load `dist/extensions/firefox/manifest.json`.
+
+The source setup creates its own Python environment. macOS support has not yet been validated on Apple hardware; the Windows executable does not run on a Mac.
 
 ## Safari
 
-The repository includes experimental Safari/Xcode source in `safari/`. It must be built on a Mac with Xcode and used with the local companion app. It has not yet been compiled, signed or tested on a real Mac, so it is not a ready Safari download.
+Safari requires an extension built with Xcode. See [the Safari guide](../platforms/safari/README.md). These are experimental sources, not a signed or tested Safari download.
 
 ## Optional video details
 
-The app saves videos without FFmpeg. Install FFmpeg and make `ffprobe` available in your system `PATH` if you also want measured codec, dimensions, duration and frame-rate details. Without it, those technical fields are marked as unavailable.
+Videos can be saved without FFmpeg. Install FFmpeg and make `ffprobe` available in your PATH for measured codecs, dimensions, duration and frame rate. Without it, the corresponding technical validation is marked as unavailable.

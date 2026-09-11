@@ -1,14 +1,14 @@
 import ast
 import json
 import zipfile
-import build_distribution
+from scripts import build_distribution
 
 
 def test_source_distribution_has_complete_local_imports_and_clean_assets(tmp_path):
     dest=tmp_path/'sources'
     archive=build_distribution.package(dest)
-    assert json.loads((dest/'packaging/streamers.json').read_text()) == {'streamers':[]}
-    assert 'queries: []' in (dest/'config.yaml').read_text()
+    assert json.loads((dest/'src/twitter_x_archiver/defaults/streamers.json').read_text()) == {'streamers':[]}
+    assert 'queries: []' in (dest/'src/twitter_x_archiver/defaults/config.yaml').read_text()
     root=build_distribution.ROOT
     for p in dest.rglob('*.py'):
         for node in ast.walk(ast.parse(p.read_text(encoding='utf-8'))):
@@ -22,4 +22,4 @@ def test_source_distribution_has_complete_local_imports_and_clean_assets(tmp_pat
         paths=z.namelist()
         assert all('/data/' not in name and '/.venv/' not in name and not name.endswith('.db') for name in paths)
         assert not any(name.endswith('com.zevent.archive.json') for name in paths)
-        assert z.getinfo('sources/installer.command').external_attr >> 16 & 0o111
+        assert z.getinfo('sources/launchers/macos/install.command').external_attr >> 16 & 0o111

@@ -18,6 +18,5 @@ work/
 node_modules/
 *.partial
 *.tmp
-native_host/com.*.json
-native_host/*.bat
-native_host/*.sh
+*.egg-info/
+frames/

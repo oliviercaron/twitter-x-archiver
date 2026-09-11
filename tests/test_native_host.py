@@ -13,12 +13,12 @@ import pytest
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from install_native_host import extension_id  # noqa: E402
-import install_native_host  # noqa: E402,F401
+from twitter_x_archiver.install_native_host import extension_id  # noqa: E402
+from twitter_x_archiver import install_native_host  # noqa: E402,F401
 
 LAUNCHER = ROOT / 'native_host' / 'zevent_host.bat'
-HOST = ROOT / 'native_host' / 'host.py'
-EXTENSION_MANIFEST = ROOT / 'chrome-extension' / 'manifest.json'
+HOST = ROOT / 'src/twitter_x_archiver/native_host/host.py'
+EXTENSION_MANIFEST = ROOT / 'extension' / 'manifest.json'
 HOST_MANIFEST = ROOT / 'native_host' / 'com.zevent.archive.json'
 windows_only = pytest.mark.skipif(sys.platform != 'win32', reason='lanceur .bat propre a Windows')
 
@@ -28,8 +28,13 @@ def isolated_native_host(monkeypatch, tmp_path):
     """Exercise generated launchers against a harmless local service stub."""
     directory=tmp_path/'native_host'
     directory.mkdir()
-    (directory/'host.py').write_text(HOST.read_text(encoding='utf-8'),encoding='utf-8')
-    (tmp_path/'server_control.py').write_text(
+    stub=tmp_path/'twitter_x_archiver'
+    (stub/'native_host').mkdir(parents=True)
+    (stub/'__init__.py').write_text('')
+    (stub/'native_host/__init__.py').write_text('')
+    (stub/'native_host/host.py').write_text(HOST.read_text(encoding='utf-8'),encoding='utf-8')
+    monkeypatch.setenv('PYTHONPATH',str(tmp_path))
+    (stub/'server_control.py').write_text(
         "def status():return {'running':False,'url':'http://127.0.0.1:18765'}\n"
         "def start():return {'ok':True,**status()}\n",encoding='utf-8')
     monkeypatch.setattr(install_native_host,'HOST_DIR',directory)
@@ -65,7 +70,7 @@ def test_extension_id_follows_chrome_rules():
 def test_generated_key_yields_a_usable_id():
     crypto = pytest.importorskip('cryptography')                # absent du runtime de collecte
     del crypto
-    from install_native_host import public_key_der
+    from twitter_x_archiver.install_native_host import public_key_der
     a, b = public_key_der(), public_key_der()
     assert extension_id(a) != extension_id(b)                   # deux cles, deux identites
     assert set(extension_id(a)) <= set('abcdefghijklmnop')
@@ -119,13 +124,13 @@ def test_oversized_length_is_rejected():
 
 
 def test_wsl_path_conversion():
-    from server_control import wsl_path
+    from twitter_x_archiver.server_control import wsl_path
     assert wsl_path(r'D:\zevent2026\run_manual.sh') == '/mnt/d/zevent2026/run_manual.sh'
     assert wsl_path('/mnt/d/deja/converti.sh') == '/mnt/d/deja/converti.sh'
 
 
 def test_macos_directories(monkeypatch, tmp_path):
-    import install_native_host as ins
+    import twitter_x_archiver.install_native_host as ins
     monkeypatch.setattr(sys, 'platform', 'darwin')
     monkeypatch.setattr(ins.Path, 'home', staticmethod(lambda: tmp_path))
     dirs = ins.host_directories()
@@ -134,7 +139,7 @@ def test_macos_directories(monkeypatch, tmp_path):
 
 
 def test_linux_directories_follow_xdg(monkeypatch, tmp_path):
-    import install_native_host as ins
+    import twitter_x_archiver.install_native_host as ins
     monkeypatch.setattr(sys, 'platform', 'linux')
     monkeypatch.setattr(ins.Path, 'home', staticmethod(lambda: tmp_path))
     monkeypatch.delenv('XDG_CONFIG_HOME', raising=False)
@@ -145,7 +150,7 @@ def test_linux_directories_follow_xdg(monkeypatch, tmp_path):
 
 
 def test_every_supported_browser_is_covered(monkeypatch, tmp_path):
-    import install_native_host as ins
+    import twitter_x_archiver.install_native_host as ins
     monkeypatch.setattr(ins.Path, 'home', staticmethod(lambda: tmp_path))
     for platform in ('darwin', 'linux'):
         monkeypatch.setattr(sys, 'platform', platform)
@@ -224,7 +229,7 @@ def test_posix_launcher_preserves_paths_and_browser_arguments(monkeypatch, tmp_p
     monkeypatch.setattr(ins.app_paths, 'FROZEN', False)
     launcher = ins.write_launcher()
     # Le double remplace seulement l'hote : aucun serveur ni compte n'est touche.
-    (folder / 'host.py').write_text(
+    (tmp_path / 'twitter_x_archiver/native_host/host.py').write_text(
         'import json, sys, struct\n'
         'data=json.dumps(sys.argv[1:]).encode()\n'
         'sys.stdout.buffer.write(struct.pack("<I",len(data))+data)\n', encoding='utf-8')

@@ -2,9 +2,9 @@ import asyncio
 import copy
 import json
 from pathlib import Path
-from discussion_archive import Discussion
-from manual_archive import Jobs, ManualWorker
-from normalize import raw_objects
+from twitter_x_archiver.discussion_archive import Discussion
+from twitter_x_archiver.manual_archive import Jobs, ManualWorker
+from twitter_x_archiver.normalize import raw_objects
 from test_collector import fixture, make_config
 
 

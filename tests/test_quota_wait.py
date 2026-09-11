@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 
 from twscrape import NoAccountError
 
-from manual_archive import Jobs, ManualWorker
+from twitter_x_archiver.manual_archive import Jobs, ManualWorker
 from test_collector import make_config
 
 

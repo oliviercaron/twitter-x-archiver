@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
-const extension=path.join(__dirname,'..','chrome-extension');
+const extension=path.join(__dirname,'..','extension');
 const source=name=>fs.readFileSync(path.join(extension,name),'utf8');
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
 

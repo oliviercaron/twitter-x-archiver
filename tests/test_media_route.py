@@ -5,8 +5,8 @@ from http.server import ThreadingHTTPServer
 import httpx
 import pytest
 
-from archive_server import make_handler
-from manual_archive import Jobs
+from twitter_x_archiver.server import make_handler
+from twitter_x_archiver.manual_archive import Jobs
 
 HOST = {'Host': '127.0.0.1:18765'}
 CONTENT = bytes(range(256)) * 40          # 10 240 octets, motif verifiable
