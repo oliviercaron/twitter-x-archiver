@@ -163,7 +163,7 @@
     "message": "Archive"
   },
   "popupLink": {
-    "message": "Open the local page ↗"
+    "message": "Open the full archive ↗"
   },
   "popupQueued": {
     "message": "Added to the queue. The download happens locally."
