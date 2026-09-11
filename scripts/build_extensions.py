@@ -49,6 +49,8 @@ def build(target, destination):
     assets = [p for p in source.iterdir() if p.is_file() and p.suffix in ('.js', '.css', '.html')]
     for asset in assets:
         shutil.copyfile(asset, destination / asset.name)
+    if (source / 'icons').is_dir():
+        shutil.copytree(source / 'icons', destination / 'icons')
     shutil.copytree(source / '_locales', destination / '_locales')
     config = {'nativeHost': SAFARI_APP_ID if target == 'safari' else 'com.zevent.archive', 'browser': target}
     (destination / 'archive_config.js').write_text(

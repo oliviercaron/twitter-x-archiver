@@ -4,6 +4,12 @@
   "version": "1.1.2",
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
+  "icons": {
+    "16": "icons/archive-16.png",
+    "32": "icons/archive-32.png",
+    "48": "icons/archive-48.png",
+    "128": "icons/archive-128.png"
+  },
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtAogGPJOqyLooNHgkOYjYPUZYDPcTqmchuK5a/hQVhASNYU7ecLzt3oE2gBwDDGAhiSpfT1GZuphUoLp5sbJqPygXPHFhzZcEcWWH2wmR69DozfAILplJDbW03PhyndfMdo1qnR5HsYUx3aX5P/8YyCwKIlav7LuqjiBdQWsqah0sDeIZ6mMsvCStvP+sqZSjh2jPOfjN8vg90SWezvEryRnQmnM4lpnnjPZy9X08EKuPV/rg2rZQs+/aLhA96XRuxEFV5xx5OMe8U4ZBeC1eSicvejse/6opXXaUs02agoPp9yU9OeK88pDEuQQ/iNdT4JCLM4WrvaG9G/V2CDmHQIDAQAB",
   "permissions": [
     "storage",
@@ -24,6 +30,12 @@
     "service_worker": "background.js"
   },
   "action": {
+    "default_icon": {
+      "16": "icons/archive-16.png",
+      "32": "icons/archive-32.png",
+      "48": "icons/archive-48.png",
+      "128": "icons/archive-128.png"
+    },
     "default_title": "__MSG_actionTitle__",
     "default_popup": "popup.html"
   },
