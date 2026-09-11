@@ -299,7 +299,10 @@ def make_handler(jobs,token,stop=None,storage=None,gate=None,pause=None):
                     data_dir=jobs.path.parent
                     plan=remove_post.plan(data_dir,ident)
                     shared=plan['shared_media']+plan['shared_raw']
-                    if shared and not body.get('force'):
+                    preserve_shared=body.get('preserve_shared') is True
+                    if preserve_shared and body.get('force'):
+                        return self.respond(400,{'error':'conflicting_delete_options'})
+                    if shared and not body.get('force') and not preserve_shared:
                         # Un media ou une reponse brute partages appartiennent
                         # aussi a un autre post : les detruire l'abimerait.
                         # Nommer ces voisins permet a l'utilisateur de decider.
@@ -308,8 +311,11 @@ def make_handler(jobs,token,stop=None,storage=None,gate=None,pause=None):
                         return self.respond(409,{'error':'shared','shared':len(shared),
                                                  'with':others[:5],'others':len(others)})
                     remove_post.apply(plan,data_dir,bool(body.get('force')),backup=False)
-                    left=remove_post.verify(data_dir,ident)
-                    return self.respond(200,{'deleted':ident,'left':left})
+                    kept=remove_post.preserved_paths(plan) if preserve_shared else set()
+                    left=remove_post.verify(data_dir,ident,preserved=kept)
+                    result={'deleted':ident,'left':left}
+                    if kept:result['preserved_shared']=len(kept)
+                    return self.respond(200,result)
                 if self.path=='/api/category':
                     ident=str(body.get('tweet_id') or '')
                     if not re.fullmatch(r'\d{1,20}',ident):raise ValueError()

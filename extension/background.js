@@ -16,7 +16,12 @@ function startServer(){
  return starting;
 }
 function canonical(value){const u=new URL(value);if(!['https:','http:'].includes(u.protocol)||!['x.com','www.x.com','twitter.com','www.twitter.com','mobile.twitter.com'].includes(u.hostname)||u.username||u.password||u.port)throw Error(t('errorBadUrl'));const m=u.pathname.match(/^\/(?:[A-Za-z0-9_]{1,50}|i\/web)\/status\/(\d{1,20})(?:\/(?:photo|video)\/\d+)?\/?$/);if(!m||BigInt(m[1])<=0n||BigInt(m[1])>=2n**64n)throw Error(t('errorBadUrl'));return `https://x.com/i/status/${m[1]}`;}
-async function api(path,body,retried){const {bridgeToken}=await EXT.storage.local.get('bridgeToken');if(!bridgeToken)throw Error(t('errorNotPaired'));let r;try{r=await fetch(BASE+path,{method:body?'POST':'GET',headers:{Authorization:`Bearer ${bridgeToken}`,...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(12000)});}catch{if(retried)throw Error(t('errorStillDown'));await startServer();return api(path,body,true);}if(r.status===403)throw Error(t('errorPairAgain'));if(!r.ok)throw Error(t('errorRefused'));return r.json();}
+async function api(path,body,retried){const {bridgeToken}=await EXT.storage.local.get('bridgeToken');if(!bridgeToken)throw Error(t('errorNotPaired'));let r;try{r=await fetch(BASE+path,{method:body?'POST':'GET',headers:{Authorization:`Bearer ${bridgeToken}`,...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(12000)});}catch{if(retried)throw Error(t('errorStillDown'));await startServer();return api(path,body,true);}if(r.status===403)throw Error(t('errorPairAgain'));if(!r.ok){
+  let payload;try{payload=await r.json();}catch{}
+  const code=payload?.error==='shared'?'shared':payload?.error==='storage_busy'?'storage_busy':'request_refused';
+  const error=Error(t(code==='shared'?'tipDeleteShared':'errorRefused'));
+  error.code=code;throw error;
+ }return r.json();}
 // Deux cookies nommes, sur x.com uniquement : aucune enumeration, aucun autre site.
 const SESSION_COOKIES=['auth_token','ct0'];
 async function readSession(){
@@ -102,10 +107,10 @@ EXT.runtime.onMessage.addListener((message,sender,reply)=>{
   }
   if(message.type==='DELETE'){
    if(!/^\d{1,20}$/.test(String(message.id)))throw Error(t('errorBadId'));
-   return api('/api/delete',{tweet_id:String(message.id)});
+   return api('/api/delete',{tweet_id:String(message.id),preserve_shared:true});
   }
   throw Error(t('errorUnknown'));
- })().then(result=>reply({ok:true,result})).catch(error=>reply({ok:false,error:error.message}));
+ })().then(result=>reply({ok:true,result})).catch(error=>reply({ok:false,error:error.message,code:error.code}));
  return true;
 });
 // Firefox n’accepte pas le rappel Chrome sur son API Promise removeAll.

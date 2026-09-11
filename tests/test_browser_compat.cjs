@@ -8,7 +8,7 @@ const source=name=>fs.readFileSync(path.join(extension,name),'utf8');
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
 
 async function background(namespace,nativeHost='com.zevent.archive',withMenus=true,companionReady=true){
- let handler,installed,networkDown=false;
+ let handler,installed,networkDown=false,rejection=null;
  const calls={menus:[],native:[],cookies:[],requests:[]};
  const kept={bridgeToken:'fixture-only-bridge-token-00000000000000',category:'Recherche'};
  const api={
@@ -25,7 +25,7 @@ async function background(namespace,nativeHost='com.zevent.archive',withMenus=tr
   create:()=>calls.menus.push('create'),onClicked:{addListener(){}},
  };
  const context={URL,AbortSignal,[namespace]:api,ARCHIVE_CONFIG:{nativeHost},
-  fetch:async(url,options)=>{if(networkDown)throw Error('offline');calls.requests.push({url,options});return {ok:true,status:200,json:async()=>({jobs:[]})};}};
+  fetch:async(url,options)=>{if(networkDown)throw Error('offline');calls.requests.push({url,options});return rejection?{ok:false,status:409,json:async()=>rejection}:{ok:true,status:200,json:async()=>({jobs:[]})};}};
  // When both exist, prefer browser: Firefox's chrome aliases need callbacks.
  if(namespace==='browser')context.chrome=new Proxy({},{get(){throw Error('Wrong API namespace');}});
  vm.runInNewContext(source('background.js'),context);
@@ -45,6 +45,17 @@ async function background(namespace,nativeHost='com.zevent.archive',withMenus=tr
  assert.equal((await send({type:'SESSION'},'https://x.com/home')).ok,false,'session transfer only from local or extension pages');
  assert.equal((await send({type:'JOBS'},'https://example.org/')).ok,false);
  assert.equal((await send({type:'PAIR',token:kept.bridgeToken},'http://127.0.0.1:18765/')).ok,true);
+ assert.equal((await send({type:'DELETE',id:'123'},'https://x.com/home')).ok,true);
+ assert.deepEqual(JSON.parse(calls.requests.at(-1).options.body),{tweet_id:'123',preserve_shared:true});
+ rejection={error:'shared'};
+ const shared=await send({type:'DELETE',id:'123'},'https://x.com/home');
+ assert.equal(shared.ok,false);
+ assert.equal(shared.code,'shared');
+ assert.equal(shared.error,'tipDeleteShared','older companions still explain a shared-file refusal');
+ rejection={error:'unexpected-internal-detail',message:'private-detail-must-not-be-forwarded'};
+ const failed=await send({type:'DELETE',id:'123'},'https://x.com/home');
+ assert.equal(failed.code,'request_refused');
+ assert.equal(failed.error,'errorRefused');
 }
 
 async function pair(namespace){

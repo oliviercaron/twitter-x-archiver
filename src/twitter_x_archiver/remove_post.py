@@ -115,13 +115,16 @@ def plan(data, ident):
     # Fichiers nommes d'apres le post mais qu'aucune ligne ne reference plus.
     # Tous les sous-dossiers de media sont balayes : images, videos, thumbnails
     # et tout dossier ajoute plus tard.
-    stray = []
+    stray, retained_strays = [], []
     for f in (data / 'media').rglob(f'{ident}_*'):
         if not f.is_file():
             continue
         rel = f.relative_to(data).as_posix()
         if rel not in mine_paths and rel.removesuffix('.json') not in mine_paths:
-            stray.append(rel)
+            if rel in other_paths or rel.removesuffix('.json') in other_paths:
+                retained_strays.append(rel)
+            else:
+                stray.append(rel)
 
     exports = []
     for csv in sorted((ROOT / 'resultats').glob('*/tweets.csv')):
@@ -131,7 +134,7 @@ def plan(data, ident):
     return {'ident': ident, 'row': row, 'job': job, 'media': media, 'shared_media': shared_media,
             'raw': raw, 'shared_raw': shared_raw, 'receipts': receipts, 'pages': pages,
             'posts_dir': (data / 'posts' / ident), 'in_parquet': in_parquet,
-            'stray': sorted(stray), 'exports': exports}
+            'stray': sorted(stray), 'retained_strays': sorted(retained_strays), 'exports': exports}
 
 
 def sharers(data, ident):
@@ -176,6 +179,13 @@ def render(p, data):
         print(f"  exports   present dans : {', '.join(p['exports'])}")
 
 
+def preserved_paths(p):
+    """Files still needed by other archived posts, including media receipts."""
+    return {name for media in p['shared_media']
+            for name in (media['path'], media['path'] + '.json')} | {
+                raw['ref'] for raw in p['shared_raw']} | set(p.get('retained_strays', ()))
+
+
 def apply(p, data, force_shared, backup=True):
     """Supprime. Sans sauvegarde, l'operation est definitive : c'est le mode
     utilise par l'interface, ou l'utilisateur a confirme explicitement."""
@@ -194,7 +204,11 @@ def apply(p, data, force_shared, backup=True):
         summary_index.drop(db, ident)      # sinon le post survivrait dans la consultation
     except sqlite3.Error:
         pass
+    kept = preserved_paths(p) if not force_shared else set()
     for key in p['receipts']:
+        receipt = db.execute('SELECT doc FROM files WHERE key=?', (key,)).fetchone()
+        if receipt and json.loads(receipt[0]).get('local_media_path') in kept:
+            continue
         db.execute('DELETE FROM files WHERE key=?', (key,))
     pages = [Path(r['ref']).name.replace('.json.gz', '') for r in p['raw']]
     if force_shared:
@@ -258,14 +272,16 @@ def is_backup(path):
     return any(name.endswith(s) for s in BACKUP_SUFFIXES)
 
 
-def verify(data, ident):
+def verify(data, ident, preserved=()):
     """Aucun residu ne doit subsister apres coup, hors sauvegardes."""
     left = []
+    preserved = set(preserved)
     db = sqlite3.connect(f'file:{data/"collection.db"}?mode=ro', uri=True)
     if db.execute('SELECT 1 FROM tweets WHERE id=?', (ident,)).fetchone():
         left.append('ligne en base')
     if [k for k, doc in db.execute('SELECT key, doc FROM files')
-            if ident in (json.loads(doc).get('local_media_path') or '')]:
+            if ident in (json.loads(doc).get('local_media_path') or '')
+            and json.loads(doc).get('local_media_path') not in preserved]:
         left.append('recus files')
     db.close()
     queue = data / 'manual_queue.db'
@@ -274,7 +290,8 @@ def verify(data, ident):
         if q.execute('SELECT 1 FROM jobs WHERE tweet_id=?', (ident,)).fetchone():
             left.append('job en file')
         q.close()
-    left += [str(f.relative_to(data)) for f in data.rglob(f'*{ident}*') if not is_backup(f)]
+    left += [str(f.relative_to(data)) for f in data.rglob(f'*{ident}*')
+             if not is_backup(f) and f.relative_to(data).as_posix() not in preserved]
     return left
 
 

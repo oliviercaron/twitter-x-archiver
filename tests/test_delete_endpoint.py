@@ -1,5 +1,7 @@
 """Suppression depuis l'interface : ce qui part, ce qui est refuse, ce qui reste."""
 import sqlite3
+import json
+from pathlib import Path
 import threading
 from http.server import ThreadingHTTPServer
 
@@ -74,6 +76,78 @@ def test_shared_media_is_refused_not_destroyed(tmp_path):
         assert not (data / 'media/videos/111_00.mp4').exists()
     finally:
         server.shutdown()
+
+
+@pytest.mark.parametrize('ident', ['111', '222'])
+def test_preserving_shared_files_deletes_only_the_selected_post(tmp_path, ident):
+    rows = [tweet('111', 'media/videos/111_00.mp4', 'shared', ['raw/111_page.json.gz']),
+            tweet('222', 'media/videos/111_00.mp4', 'shared', ['raw/111_page.json.gz'], relation='quote')]
+    selected = next(row for row in rows if row['tweet_id'] == ident)
+    selected['media'] += tweet(ident, f'media/videos/{ident}_own.mp4', 'own')['media']
+    data, server, base = prepare(tmp_path, rows, jobs=[('111', 'done'), ('222', 'done')])
+    other = '222' if ident == '111' else '111'
+    before = (data / f'posts/{other}/tweet.json').read_bytes()
+    retained = ['media/videos/111_00.mp4', 'media/videos/111_00.mp4.json', 'raw/111_page.json.gz']
+    original = {path: (data / path).read_bytes() for path in retained}
+    try:
+        response = httpx.post(base + '/api/delete', headers=HEAD,
+                              json={'tweet_id': ident, 'preserve_shared': True})
+        assert response.status_code == 200
+        assert response.json() == {'deleted': ident, 'left': [], 'preserved_shared': 3}
+        assert not (data / f'posts/{ident}').exists()
+        assert not (data / f'media/videos/{ident}_own.mp4').exists()
+        assert not (data / f'media/videos/{ident}_own.mp4.json').exists()
+        assert (data / f'posts/{other}/tweet.json').read_bytes() == before
+        assert {path: (data / path).read_bytes() for path in retained} == original
+        with sqlite3.connect(data / 'collection.db') as db:
+            assert db.execute('SELECT id FROM tweets').fetchall() == [(other,)]
+            assert db.execute('SELECT id FROM pages').fetchall() == [('111_page',)]
+            receipts = [json.loads(row[0]) for row in db.execute('SELECT doc FROM files')]
+            assert receipts == [{'local_media_path': 'media/videos/111_00.mp4'}]
+            assert db.execute('PRAGMA integrity_check').fetchone()[0] == 'ok'
+        with sqlite3.connect(data / 'manual_queue.db') as db:
+            assert db.execute('SELECT tweet_id FROM jobs').fetchall() == [(other,)]
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+def test_preserve_shared_does_not_hide_unrelated_leftovers(tmp_path):
+    from twitter_x_archiver import remove_post
+    data = build(tmp_path, [tweet('111', 'media/videos/111_00.mp4', 'shared'),
+                            tweet('222', 'media/videos/111_00.mp4', 'shared')])
+    plan = remove_post.plan(data, '111')
+    remove_post.apply(plan, data, force_shared=False, backup=False)
+    (data / 'media/videos/111_failed.mp4').write_bytes(b'undeleted')
+    assert remove_post.verify(data, '111', preserved=remove_post.preserved_paths(plan)) == [
+        str(Path('media/videos/111_failed.mp4'))]
+
+
+def test_preserve_shared_keeps_files_referenced_only_by_another_post(tmp_path):
+    data, server, base = prepare(tmp_path, [tweet('111'),
+        tweet('222', 'media/videos/111_00.mp4', 'shared')])
+    try:
+        response = httpx.post(base + '/api/delete', headers=HEAD,
+                              json={'tweet_id': '111', 'preserve_shared': True})
+        assert response.status_code == 200 and response.json()['left'] == []
+        assert (data / 'media/videos/111_00.mp4').read_bytes() == b'contenu'
+        assert (data / 'media/videos/111_00.mp4.json').is_file()
+        assert (data / 'posts/222/tweet.json').is_file()
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+def test_conflicting_shared_file_options_are_rejected(tmp_path):
+    data, server, base = prepare(tmp_path, [tweet('111')])
+    try:
+        response = httpx.post(base + '/api/delete', headers=HEAD,
+                              json={'tweet_id': '111', 'preserve_shared': True, 'force': True})
+        assert response.status_code == 400
+        assert (data / 'posts/111/tweet.json').exists()
+    finally:
+        server.shutdown()
+        server.server_close()
 
 
 @pytest.mark.parametrize('body', [

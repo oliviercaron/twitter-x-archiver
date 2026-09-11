@@ -89,7 +89,7 @@
       states.delete(id);
       repaint();
     }catch(error){
-      const shared=/partag|shared/i.test(error.message);
+      const shared=error.code==='shared'||/partag|shared/i.test(error.message);
       remove.innerHTML=CROSS+'<span>'+(shared?t('deleteShared'):t('deleteFailed'))+'</span>';
       remove.title=shared?t('tipDeleteShared'):error.message;
       remove.setAttribute('aria-label',remove.title);
@@ -102,7 +102,7 @@
     let answer;
     try{answer=await EXT.runtime.sendMessage(message);}
     catch(error){stop();throw Error(RECHARGER);}
-    if(!answer?.ok)throw Error(answer?.error||t('errorNoExtension'));
+    if(!answer?.ok){const error=Error(answer?.error||t('errorNoExtension'));error.code=answer?.code;throw error;}
     return answer.result;
   }
 
