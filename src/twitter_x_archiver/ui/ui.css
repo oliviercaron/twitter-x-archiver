@@ -156,7 +156,10 @@ select:hover{border-color:#8caf9b}
 .shared-note .linked-post-link:hover{color:#5f4004}
 .shared-note .linked-relation{font-size:11px;color:#9b7a35}
 .shared-note .linked-text{display:block;color:#6d5c3d;line-height:1.35;max-width:70ch}
-.shared-note button.link{display:block;margin-top:8px}
+.shared-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+.shared-note button.link{display:inline-block;margin-top:0}
+.shared-note button.link.cancel{color:#5b7069;text-decoration:none}
+.shared-note button.link.cancel:hover{text-decoration:underline}
 button.link{all:unset;color:#c0392b;font-weight:700;cursor:pointer;text-decoration:underline}
 button.link:focus-visible{outline:2px solid #c0392b;outline-offset:2px}
 button.link:disabled{opacity:.6;cursor:wait}

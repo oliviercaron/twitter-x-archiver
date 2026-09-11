@@ -191,6 +191,10 @@ function explainShared(button,id,payload){
  const card=button.closest('.job');
  if(!card)return;
  const others=Number.isInteger(payload.others)?payload.others:(payload.with||[]).length;
+ // Le refus a deja eu lieu : le bouton principal redevient une action de
+ // consultation et ne doit pas rester arme pendant que l'explication est lue.
+ button.dataset.armed='0';button.disabled=false;
+ button.title=T('wipeTip');button.setAttribute('aria-label',button.title);
  let note=card.querySelector('.shared-note');
  if(!note){note=el('div','','shared-note');card.querySelector('.info').append(note);}
  note.replaceChildren(document.createTextNode(T('sharedNote')(others)));
@@ -210,6 +214,7 @@ function explainShared(button,id,payload){
    note.append(line);
   }
  }
+ const actions=el('div',null,'shared-actions');
  const keep=el('button',T('wipeKeepShared'),'link');keep.type='button';
  keep.onclick=async()=>{
   keep.disabled=true;keep.textContent=T('wipeRunning');
@@ -221,8 +226,10 @@ function explainShared(button,id,payload){
    await loadPosts();
   }catch{keep.disabled=false;keep.textContent=T('wipeFailed');}
  };
- note.append(keep);
- setTimeout(()=>{note.remove();resetWipe(button);},15000);
+ const cancel=el('button',T('wipeCancel'),'link cancel');cancel.type='button';
+ cancel.onclick=()=>{note.remove();resetWipe(button);};
+ actions.append(keep,cancel);
+ note.append(actions);
 }
 
 function renderPager(data){

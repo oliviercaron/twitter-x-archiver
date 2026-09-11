@@ -153,6 +153,7 @@ const STRINGS = {
     linkedRelation: relation => ({quote: 'Post cité', repost: 'Post reposté',
       raw_response: 'Réponse brute partagée'}[relation] || 'Média partagé'),
     wipeKeepShared: 'Supprimer ce post, garder le média',
+    wipeCancel: 'Annuler',
 
     pairing: 'Connexion…',
     pairMissing: 'L’extension n’a pas répondu. Vérifiez son installation et son activation dans ce navigateur, puis rechargez cette page. Le guide d’installation précise les étapes pour chaque navigateur.',
@@ -311,6 +312,7 @@ const STRINGS = {
     linkedRelation: relation => ({quote: 'Quoted post', repost: 'Reposted post',
       raw_response: 'Shared raw response'}[relation] || 'Shared media'),
     wipeKeepShared: 'Delete this post, keep the media',
+    wipeCancel: 'Cancel',
 
     pairing: 'Connecting…',
     pairMissing: 'The extension did not respond. Check that it is installed and enabled in this browser, then reload this page. The installation guide has instructions for each browser.',
