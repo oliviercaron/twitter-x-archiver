@@ -4,7 +4,8 @@ body{margin:0}
 main{max-width:900px;margin:44px auto;padding:0 24px}
 
 header{display:flex;gap:18px;align-items:center;margin-bottom:22px}
-.mark{width:52px;height:52px;border-radius:15px;background:#126b58;color:#fff;display:grid;place-items:center;font-size:34px;flex-shrink:0}
+.mark{width:52px;height:52px;border-radius:15px;overflow:hidden;display:grid;place-items:center;flex-shrink:0}
+.mark svg{display:block;width:100%;height:100%}
 h1{font-size:26px;letter-spacing:-.5px;margin:0 0 4px}
 h2{font-size:18px;margin:0 0 12px}
 p{color:#5b7069;line-height:1.5;margin:8px 0}
